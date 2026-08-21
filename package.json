@@ -1,17 +1,6 @@
 {
-  "name": "pte-app",
+  "name": "pte-mock-exam",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
-  "dependencies": {
-    "electron": "^43.4.1",
-    "electron-packager": "^17.1.2"
-  }
+  "main": "main.js",
+  "dependencies": {}
 }
