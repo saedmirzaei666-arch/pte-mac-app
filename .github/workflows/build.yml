@@ -9,10 +9,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - run: npm install electron @electron/packager
-      - run: npx @electron/packager . "PTE-Mock-Exam" --platform=darwin --arch=arm64 --out=dist
+      - run: npm install electron @electron/packager @electron/universal
+      - run: npx @electron/packager . "PTE-Mock-Exam" --platform=darwin --arch=universal --out=dist
       - run: cd dist && zip -r ../PTE-Mac-App.zip .
       - uses: actions/upload-artifact@v4
         with:
-          name: PTE-Mock-Exam-Mac
+          name: PTE-Mock-Exam-Universal
           path: PTE-Mac-App.zip
