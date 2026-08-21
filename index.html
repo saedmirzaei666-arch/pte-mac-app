@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pearson PTE ROOM Scored Practice 1 - Full Mock Test</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, sans-serif; }
+    body { background-color: #fff; color: #222; display: flex; flex-direction: column; min-height: 100vh; user-select: none; }
+
+    /* Top Bar */
+    .header { padding: 12px 24px; border-bottom: 2px solid #e0e0e0; position: relative; }
+    .header-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .logo-area h1 { color: #003057; font-size: 26px; font-weight: bold; letter-spacing: -0.5px; }
+    .exam-title { font-size: 18px; color: #333; margin-top: 4px; font-weight: 500; }
+    .section-title { font-size: 14px; color: #666; }
+    .timer-area { font-size: 14px; font-weight: bold; display: flex; gap: 15px; align-items: center; }
+    .progress-bar { position: absolute; bottom: -2px; left: 0; height: 4px; background-color: #0077c8; transition: width 0.3s ease; }
+
+    /* Main Container */
+    .main-container { flex: 1; padding: 25px 30px; width: 100%; display: flex; flex-direction: column; text-align: left; }
+
+    /* Instructions & Text */
+    .instruction { font-style: italic; font-size: 13.5px; font-weight: bold; margin-bottom: 20px; color: #111; max-width: 950px; line-height: 1.5; }
+    .prompt-text { font-size: 15px; line-height: 2.2; color: #111; max-width: 950px; margin-top: 15px; }
+    .passage-text { font-size: 13.5px; line-height: 1.65; color: #222; margin-bottom: 25px; text-align: justify; }
+    .passage-text p { margin-bottom: 12px; }
+
+    /* Layout: 50/50 Split */
+    .split-layout { display: flex; width: 100%; min-height: 380px; }
+    .left-panel { width: 50%; display: flex; align-items: flex-start; justify-content: flex-start; }
+    .right-panel { width: 50%; padding-left: 20px; display: flex; flex-direction: column; align-items: flex-start; }
+
+    .image-box { border: 1px solid #ccc; background: #fff; display: inline-block; }
+    .image-box img { display: block; max-height: 280px; max-width: 100%; object-fit: contain; }
+
+    /* Audio Player */
+    .player-box { width: 330px; border: 1px solid #bbb; background: #fbfbfb; margin-bottom: 15px; border-radius: 2px; }
+    .player-status-bar { padding: 8px 12px; display: flex; align-items: center; gap: 10px; font-size: 12px; color: #444; }
+    .player-play-icon { font-size: 13px; color: #666; }
+    .player-bar-wrap { flex: 1; height: 6px; background: #ddd; border-radius: 2px; overflow: hidden; }
+    .player-bar-fill { height: 100%; width: 0%; background: #0077c8; }
+
+    /* Audio Recorder */
+    .recorder-box { width: 330px; border: 1px solid #bbb; background: #fff; border-radius: 2px; margin-bottom: 20px; }
+    .recorder-header { font-size: 13px; font-weight: bold; text-align: left; padding: 8px 12px; border-bottom: 1px solid #ddd; background: #fff; }
+    .recorder-status { height: 65px; display: flex; align-items: center; justify-content: center; color: #d9381e; font-size: 14px; font-weight: bold; }
+    .recorder-bottom { background: #f4f4f4; padding: 8px 12px; display: flex; align-items: center; gap: 10px; border-top: 1px solid #ddd; }
+    .rec-dot { width: 10px; height: 10px; border-radius: 50%; background: #ccc; }
+    .rec-dot.active { background: #d9381e; }
+    .rec-time { font-size: 12px; color: #444; font-family: monospace; }
+    .rec-bar-wrap { flex: 1; height: 8px; background: #ddd; border-radius: 2px; overflow: hidden; }
+    .rec-bar-fill { height: 100%; width: 0%; background: #0077c8; transition: width 1s linear; }
+
+    /* Listening Player */
+    .lst-player-box { width: 320px; border: 1px solid #bbb; background: #fff; margin-bottom: 25px; border-radius: 2px; }
+    .lst-player-header { font-size: 13px; font-weight: bold; text-align: center; padding: 6px 12px; border-bottom: 1px solid #ddd; background: #fff; }
+    .lst-player-status { height: 45px; display: flex; align-items: center; justify-content: center; color: #d9381e; font-size: 13px; font-weight: bold; }
+    .lst-player-bottom { background: #f4f4f4; padding: 6px 12px; display: flex; align-items: center; gap: 8px; border-top: 1px solid #ddd; font-size: 12px; }
+
+    /* Writing Components */
+    .editor-container { width: 100%; border: 1px solid #4a90e2; border-radius: 2px; overflow: hidden; background: #fff; }
+    .editor-toolbar { background: #e9ecef; border-bottom: 1px solid #ced4da; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center; }
+    .toolbar-left { display: flex; gap: 10px; }
+    .btn-tool { background: none; border: none; font-size: 12.5px; color: #333; cursor: pointer; padding: 2px 6px; }
+    .btn-tool:hover { background: #dee2e6; border-radius: 2px; }
+    .word-count { font-size: 12.5px; color: #333; font-weight: 500; }
+    .editor-textarea { width: 100%; height: 150px; padding: 12px; font-size: 14px; line-height: 1.6; border: none; outline: none; resize: vertical; font-family: Arial, sans-serif; user-select: text; }
+    .editor-textarea.essay { height: 260px; }
+
+    /* Reading Components */
+    select { padding: 4px 8px; font-size: 14px; border: 1px solid #777; border-radius: 3px; background: #fff; margin: 0 4px; outline: none; }
+    .drop-target { display: inline-block; min-width: 100px; height: 28px; border: 1px dashed #666; border-radius: 3px; vertical-align: middle; margin: 0 4px; padding: 0 8px; line-height: 26px; text-align: center; background: #fdfdfd; }
+    .drop-target.drag-over { background: #e3f2fd; border-color: #0077c8; }
+    .word-pool { margin-top: 35px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; background: #f9f9f9; padding: 15px; border-radius: 4px; border: 1px solid #ddd; min-height: 55px; }
+    .word-chip { border: 1px solid #888; padding: 5px 12px; font-size: 14px; border-radius: 3px; background: #fff; cursor: grab; display: inline-block; }
+    .word-chip:active { cursor: grabbing; }
+
+    /* Reading RO Layout */
+    .ro-wrapper { display: flex; align-items: center; justify-content: center; gap: 15px; margin-top: 25px; }
+    .ro-column { width: 450px; }
+    .ro-header { font-weight: bold; font-size: 14px; text-align: center; margin-bottom: 8px; color: #333; }
+    .ro-table { border: 1px solid #777; background: #fbfbfb; display: flex; flex-direction: column; }
+    .ro-slot { min-height: 52px; border-bottom: 1px solid #aaa; display: flex; align-items: center; padding: 4px; background: #fafafa; }
+    .ro-slot:last-child { border-bottom: none; }
+    .ro-slot.drag-over { background: #e3f2fd; border-color: #0077c8; }
+    .ro-card { width: 100%; min-height: 42px; background: #fff; border: 1px solid #888; padding: 6px 10px; font-size: 13.5px; line-height: 1.35; cursor: grab; user-select: none; }
+    .ro-card:active { cursor: grabbing; }
+    .ro-card.selected { border: 2px solid #0077c8; background: #eef6fc; }
+    .ro-mid-arrows, .ro-side-arrows { display: flex; flex-direction: column; gap: 8px; justify-content: center; }
+    .ro-arrow-btn { background: #f4f4f4; border: 1px solid #999; width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; border-radius: 2px; }
+    .ro-arrow-btn:hover { background: #e0e0e0; }
+
+    /* Listening Components */
+    .lfib-content { font-size: 14.5px; line-height: 2.6; color: #222; max-width: 1050px; text-align: justify; }
+    .lfib-input { width: 130px; height: 28px; border: 1px solid #777; border-radius: 2px; padding: 2px 8px; font-size: 14px; margin: 0 4px; outline: none; vertical-align: middle; }
+    .hiw-passage-box { border: 1px solid #bbb; background: #fff; border-radius: 2px; padding: 20px; font-size: 14.5px; line-height: 2.1; color: #222; max-width: 1100px; text-align: justify; }
+    .hiw-word { display: inline; cursor: pointer; padding: 1px 2px; border-radius: 2px; transition: background 0.1s; }
+    .hiw-word:hover { background-color: #f0f0f0; }
+    .hiw-word.selected { background-color: #ffff00 !important; color: #000; }
+    .wfd-input-box { width: 100%; height: 38px; border: 1px solid #777; border-radius: 2px; padding: 6px 12px; font-size: 14.5px; outline: none; color: #111; margin-top: 10px; }
+
+    /* Intro / Overview Tables */
+    .ready-box { margin: auto; background: #f9f9f9; padding: 30px 40px; border-radius: 4px; max-width: 550px; display: flex; flex-direction: column; gap: 20px; }
+    .ready-title { font-size: 20px; color: #222; font-weight: 500; }
+    .ready-item { display: flex; align-items: flex-start; gap: 15px; font-size: 14px; line-height: 1.5; color: #333; }
+    .pearson-table { width: 100%; max-width: 500px; border-collapse: collapse; margin-top: 15px; font-size: 13px; }
+    .pearson-table th, .pearson-table td { border: 1px solid #c5d8e8; padding: 6px 12px; text-align: left; }
+    .pearson-table th { background-color: #eaf2f8; color: #003057; font-weight: bold; }
+    .name-input { margin-top: 15px; padding: 8px 12px; font-size: 14px; border: 1px solid #999; border-radius: 3px; width: 280px; }
+    .btn-test { background: #e6e6e6; border: 1px solid #b5b5b5; color: #333; padding: 7px 20px; font-size: 13px; cursor: pointer; border-radius: 2px; }
+    .btn-test.recording { background: #d9381e; color: #fff; border-color: #b72b14; }
+    .status-box { width: 250px; padding: 8px 12px; font-size: 12px; text-align: center; border-radius: 3px; background-color: #d8eed8; border: 1px solid #b2dbb2; color: #276b27; margin-top: 10px; display: none; }
+
+    /* Final Screen */
+    .completion-container { display: flex; flex-direction: column; align-items: center; justify-content: center; padding-top: 40px; text-align: center; }
+    .completion-title { font-size: 20px; color: #333; font-weight: 500; margin-bottom: 25px; }
+    .assessment-badge { background-color: #d1e7dd; border: 1px solid #badbcc; border-radius: 4px; padding: 22px 30px; width: 100%; max-width: 420px; margin-bottom: 20px; color: #0f5132; font-size: 16px; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+    .assessment-feedback-box { background-color: #f8f9fa; border: 1px solid #e9ecef; border-radius: 4px; padding: 24px 30px; width: 100%; max-width: 420px; margin-bottom: 25px; }
+    .feedback-title { font-size: 15px; font-weight: bold; color: #212529; margin-bottom: 8px; }
+    .feedback-desc { font-size: 13px; color: #495057; line-height: 1.5; }
+    .close-tab-text { font-size: 14px; font-weight: bold; color: #111; }
+
+    /* Footer */
+    .footer { padding: 14px 24px; border-top: 1px solid #e0e0e0; display: flex; justify-content: space-between; align-items: center; background: #fff; }
+    .footer-left { font-size: 11px; color: #666; }
+    .btn-exit { background: #f0f0f0; border: 1px solid #ccc; padding: 6px 16px; font-size: 13px; font-weight: bold; cursor: pointer; }
+    .btn-next { background: #0077c8; color: #fff; border: none; padding: 8px 24px; font-size: 14px; font-weight: bold; cursor: pointer; border-radius: 2px; }
+    .btn-next:disabled { background: #ccc; cursor: not-allowed; }
+    .btn-next:hover:not(:disabled) { opacity: 0.9; }
+  </style>
+</head>
+<body onclick="handleUserGlobalUnlock()">
+
+  <!-- Security Access Code Modal (General Format) -->
+  <div id="authOverlay" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(15,23,42,0.95);z-index:999999;display:flex;align-items:center;justify-content:center;font-family:Arial,sans-serif;">
+    <div style="background:#ffffff;padding:35px 30px;border-radius:12px;width:380px;text-align:center;box-shadow:0 10px 25px rgba(0,0,0,0.3);">
+      <h2 style="margin:0 0 10px 0;color:#1e293b;font-size:20px;font-weight:bold;">PTE ROOM Scored Practice</h2>
+      <p style="color:#64748b;font-size:13.5px;margin-bottom:20px;">Please enter your access code</p>
+      <input type="text" id="licenseCodeInput" placeholder="Access Code (e.g. PTE-A492)" style="width:100%;padding:12px;font-size:16px;border:1.5px solid #cbd5e1;border-radius:8px;text-align:center;letter-spacing:2px;font-weight:bold;outline:none;box-sizing:border-box;margin-bottom:15px;text-transform:uppercase;" />
+      <button id="verifyBtn" onclick="verifyLicenseCode()" style="width:100%;padding:12px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;">Verify & Start Test</button>
+      <div id="authMsg" style="margin-top:15px;font-size:13px;display:none;"></div>
+    </div>
+  </div>
+
+  <header class="header">
+    <div class="header-top">
+      <div class="logo-area">
+        <h1>Pearson</h1>
+        <div class="exam-title">PTE ROOM Scored Practice 1</div>
+        <div class="section-title" id="topSectionTitle">Intro</div>
+      </div>
+      <div class="timer-area">
+        <span id="pageCounter">1 of 1</span>
+        <span id="timerDisplay">⏱ 00:00</span>
+      </div>
+    </div>
+    <div class="progress-bar" id="topProgressBar" style="width: 0%;"></div>
+  </header>
+
+  <main class="main-container" id="mainContainer"></main>
+
+  <footer class="footer" id="examFooter">
+    <div class="footer-left">
+      <button class="btn-exit" onclick="alert('Progress saved.')">💾 Save/Exit</button>
+      <div style="margin-top: 4px;">© 2026 Questionmark Computing Ltd.</div>
+    </div>
+    <button class="btn-next" id="btnNext" onclick="handleNextClick()">Next ▶</button>
+  </footer>
+
+  <audio id="globalAudioPlayer" preload="auto"></audio>
+  <audio id="beepAudioElement" src="./audio/beep.wav" preload="auto"></audio>
+
+  <script>
+    const TELEGRAM_BOT_TOKEN = "7276771319:AAHK0pr11xPfN9fKZjN-q-iFySQYTCxTLk4";
+    const TELEGRAM_ADMIN_ID = "-5524392972";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXBL2MUo5iYXghCipEvc067-fpRxXTk4WlETY9XC6PHtYgpijGZ-aw3N4xmzlGRLb6GQ/exec";
+
+    let currentAccessCode = "";
+    let studentName = "Candidate";
+    let internalClipboard = "";
+    let isAudioUnlocked = false;
+    let currentRecordingTaskTitle = "";
+
+    // Full Unified Exam Flow
+    const examFlow = [
+      // 1. INTRO & MIC CHECK
+      { type: "MIC_CHECK", title: "Microphone Check" },
+      { type: "READY", title: "Ready to start the test" },
+      { type: "SPEAKING_OVERVIEW", title: "Speaking & Writing Overview" },
+      { type: "PERSONAL_INTRO", title: "Personal Introduction", prepTime: 25, recTime: 30 },
+
+      // 2. SPEAKING SECTION
+      { type: "RA", title: "Read Aloud 1 (#1360 Society)", text: "Societies face numerous challenges, including inequality, discrimination, and social injustice. It's important to recognize these issues and work towards building a more equitable and compassionate society. By raising awareness, supporting marginalized communities, and advocating for social justice, we can work towards creating a better future for all.", prepTime: 40, recTime: 40 },
+      { type: "RA", title: "Read Aloud 2 (#1302 Natural Environments)", text: "The environment consists of various components that interact and influence each other. For instance, the atmosphere provides the air we breathe, while bodies of water like rivers, lakes, and oceans support diverse aquatic ecosystems. Landscapes encompass forests, grasslands, mountains, and deserts, each with its unique characteristics and biodiversity.", prepTime: 40, recTime: 40 },
+      { type: "RA", title: "Read Aloud 3 (#1044 Being Scared)", text: "Being scared to death boils down to our autonomic response to a strong emotion, such as fear. For fear-induced deaths, the demise starts with our fight-or-flight response, which is the body’s physical response to a perceived threat. This response is characterized by an increased heart rate, anxiety, perspiration, and increased blood glucose levels.", prepTime: 40, recTime: 40 },
+
+      { type: "RS", title: "Repeat Sentence 1", audioSrc: "./audio/rs1.mp3", recTime: 15 },
+      { type: "RS", title: "Repeat Sentence 2", audioSrc: "./audio/rs2.mp3", recTime: 15 },
+      { type: "RS", title: "Repeat Sentence 3", audioSrc: "./audio/rs3.mp3", recTime: 15 },
+      { type: "RS", title: "Repeat Sentence 4", audioSrc: "./audio/rs4.mp3", recTime: 15 },
+      { type: "RS", title: "Repeat Sentence 5", audioSrc: "./audio/rs5.mp3", recTime: 15 },
+
+      { type: "DI", title: "Describe Image 1", imgSrc: "./image/di1.jpg", prepTime: 25, recTime: 40 },
+      { type: "DI", title: "Describe Image 2", imgSrc: "./image/di2.jpg", prepTime: 25, recTime: 40 },
+      { type: "DI", title: "Describe Image 3", imgSrc: "./image/di3.jpg", prepTime: 25, recTime: 40 },
+
+      { type: "RL", title: "Re-tell Lecture 1", audioSrc: "./audio/rl1.mp3", prepTime: 10, recTime: 40 },
+      { type: "SGD", title: "Summarize Group Discussion 1", audioSrc: "./audio/sgd1.mp3", prepTime: 10, recTime: 120 },
+      { type: "RTS", title: "Respond to a Situation 1", audioSrc: "./audio/rts1.mp3", text: "The school is looking for volunteers to help students during orientation. You want to join this event because you are good at preparing publicity materials, and you are available on Friday. What would you say to the committee?", prepTime: 10, recTime: 40 },
+
+      // 3. WRITING SECTION
+      { type: "WRITING_TRANSITION", title: "Writing Section Transition" },
+      { 
+        type: "SWT", 
+        title: "Summarize Written Text", 
+        duration: 10 * 60,
+        text: "<p>The 1920's movie goers experience was largely dominated by silent movies but saw the introduction of synchronized sound. In the 1920's movie stars were really stars - with huge salaries, the fashions and activities of the Hollywood greats echoed around the world and 100,000 people would gather in cities all over the world, including such diverse cities as London and Moscow, to greet Mary Pickford and Douglas Fairbanks when they toured of Europe. Early silent movies were often accompanied by live piano or organ music and provided enormous entertainment value to audiences captivated by the experience of watching moving pictures on the silver screen. Although there had been previous attempts to introduce sound, it wasn't until 1923 that a synchronized soundtrack was photographically recorded and printed on to the side of the strip of motion picture film and made it on to a commercially distributed movie. It would still be seven long years before talking pictures gained total supremacy and finally replaced the silent film era.</p><p>The first movie theatres were called Nickelodeons, and were very basic compared to the luxurious picture palaces that followed but what an aura of excitement, of laughter, fun and tears surrounded them! Before the introduction of movie soundtracks, movies were often accompanied by scripted music from a piano.</p>" 
+      },
+      { 
+        type: "WE", 
+        title: "Write Essay", 
+        duration: 20 * 60,
+        text: "Nowadays, it is increasingly more difficult to maintain the right balance between work and the other aspects of one's life, such as leisure pursuits with family members. How important do you think this balance is and what are the reasons why some people think that this is hard to achieve？" 
+      },
+
+      // 4. READING SECTION (8 Questions, 17 Mins Batch)
+      { type: "READING_OVERVIEW", title: "Reading Overview" },
+      {
+        title: "Herbal",
+        type: "FIB_RW",
+        readingIndex: 1,
+        instruction: "Below is a text with blanks. Select the appropriate answer choice for each blank.",
+        text: "A herbal is a book of plants, describing their appearance, their properties and how they may be used for preparing ointments and medicines. The medical use of plants is {b1} on fragments of papyrus and clay tablets from ancient Egypt, Samaria and China that date back 5,000 years but document traditions far older still. Over 700 herbal remedies were detailed in the Papyrus Ebers, an Egyptian text written in 1500 BC. Around 65 BC, a Greek physician called Dioscorides wrote a herbal that was {b2} into Latin and Arabic. Known as 'De materia medica', it became the most influential work on medicinal plants in both Christian and Islamic worlds until the late 17th century. An illustrated manuscript copy of the text made in Constantinople (modern-day Istanbul) {b3} from the sixth century. The first printed herbals date from the dawn of European printing in the 1480s. They provided valuable information for apothecaries, whose job was to make the pills and potions {b4} by physicians. In the next century, landmark herbals were produced in England by William Turner, considered to be the father of British botany, and John Gerard, whose illustrations would inspire the floral fabric, wallpaper and tile designs of William Morris four centuries later.",
+        dropdowns: {
+          b1: ["recorded", "registered", "memorized", "discovered"],
+          b2: ["translated", "moved", "interpreted", "removed"],
+          b3: ["survives", "preserves", "revives", "suffers"],
+          b4: ["prescribed", "presided", "presented", "predominated"]
+        },
+        answers: { b1: "recorded", b2: "translated", b3: "survives", b4: "prescribed" }
+      },
+      {
+        title: "Whale's Dialects",
+        type: "FIB_RW",
+        readingIndex: 2,
+        instruction: "Below is a text with blanks. Select the appropriate answer choice for each blank.",
+        text: "We humans are social {b1} — we stick together. Family traditionally came first. Then more distant relatives. Then larger groups of unrelated individuals, connected by culture. But it turns out the same could be said for sperm whales. Maurício Cantor says those closely related family groups seek out others with similar behavior: whale cliques are based on {b2} similar clicks. Meaning clans of whales evolve their own {b3} — their own form of culture. Cantor and colleagues found that no other factor could explain the emergence of dialects. It is fascinating to see that they can have some type of {b4}, having their own culture.",
+        dropdowns: {
+          b1: ["creatures", "decals", "diesels", "northeastwards"],
+          b2: ["producing", "misconstruing", "spanning", "induing"],
+          b3: ["dialects", "dwells", "spares", "profess"],
+          b4: ["similarities", "parodies", "improbabilities", "parities"]
+        },
+        answers: { b1: "creatures", b2: "producing", b3: "dialects", b4: "similarities" }
+      },
+      {
+        title: "Body Energy",
+        type: "FIB_RW",
+        readingIndex: 3,
+        instruction: "Below is a text with blanks. Select the appropriate answer choice for each blank.",
+        text: "If you've ever had to pick up and carry a tired child through the mall, you know that walking sometimes tuckers out the {b1}. Now scientists think they know why. Larger animals tend to use less energy per gram of body {b2} than smaller ones do, even at rest. Researchers {b3} walkers of different ages and sizes. While subjects logged miles on the treadmill, the scientists {b4} their stride and metabolism. Big people don't {b5} energy by strolling in a more economical style; they simply need fewer strides.",
+        dropdowns: {
+          b1: ["toddlers", "precursors", "doctors", "battles"],
+          b2: ["mass", "space", "tissue", "velocity"],
+          b3: ["recruited", "advised", "dismissed", "regretted"],
+          b4: ["measured", "presented", "microsecond", "thickened"],
+          b5: ["conserve", "valve", "masterworks", "slurs"]
+        },
+        answers: { b1: "toddlers", b2: "mass", b3: "recruited", b4: "measured", b5: "conserve" }
+      },
+      {
+        title: "Coins",
+        type: "RO",
+        readingIndex: 4,
+        instruction: "The text boxes in the left panel have been placed in a random order. Restore the original order by dragging text boxes from the left panel to the right panel.",
+        items: [
+          { id: "1", text: "However, when archaeologists want to know the absolute date of a site, they can often go beyond simple stratigraphy." },
+          { id: "2", text: "Historical records, coins, and other date-bearing objects can help — if they exist. But even prehistoric sites contain records written in nature's hand." },
+          { id: "3", text: "For example, dendrochronology (literally 'tree time') dates wooden artefacts by matching their ring patterns to known records, which, in some areas of the world, span several thousand years." },
+          { id: "4", text: "The series of strata in an archaeological dig enables an excavator to date recovered objects relatively, if not absolutely." }
+        ],
+        correctOrder: ["4", "1", "2", "3"]
+      },
+      {
+        title: "Calves Experiment",
+        type: "RO",
+        readingIndex: 5,
+        instruction: "Restore the original order by dragging text boxes to the target panel.",
+        items: [
+          { id: "1", text: "To gauge optimism and pessimism, the researchers set up an experiment involving 22 calves." },
+          { id: "2", text: "Before they started the experiment, they trained the calves to understand which of their choices would lead to a reward." },
+          { id: "3", text: "The calves learned quickly which side of the pen held the milk reward." },
+          { id: "4", text: "The hole at one end contained milk from a bottle, while the hole at the opposite end contained only an empty bottle and delivered a puff of air in calves' faces." },
+          { id: "5", text: "In the training, each calf entered a small pen and found a wall with five holes arranged in a horizontal line, two-and-a-half feet apart." }
+        ],
+        correctOrder: ["1", "2", "5", "4", "3"]
+      },
+      {
+        title: "Béhanzin",
+        type: "FIB_R",
+        readingIndex: 6,
+        instruction: "In the text below some words are missing. Drag words from the box below to the appropriate place in the text.",
+        text: "Behanzin ruled the West African [b1] of Dahomey at the end of the nineteenth century, a time when Europeans were doing their utmost to colonise Africa. Behanzin put up extremely [b2] resistance. He did this with the [b3] of an army, including five thousand female warriors. He is often called King Shark, a name suggesting [b4] and wisdom. Famed for being a [b5] as well as a warrior, he wrote some of the most beautiful songs ever produced in Dahomey.",
+        pool: ["kingdom", "powerful", "aid", "strength", "poet", "monarch", "light", "battle"],
+        answers: { b1: "kingdom", b2: "powerful", b3: "aid", b4: "strength", b5: "poet" }
+      },
+      {
+        title: "Arts & Science",
+        type: "FIB_R",
+        readingIndex: 7,
+        instruction: "Drag words from the box below to the appropriate place in the text.",
+        text: "An investigation into the study habits of undergraduates was carried out by a [b1] of researchers at a number of different universities. In all the universities [b2] in the study, it was found that there were the [b3] significant differences between the habits of arts and science students. Not surprisingly perhaps, arts students read more [b4], while science students tended to concentrate on a few [b5] texts.",
+        pool: ["team", "participating", "same", "widely", "core", "staff", "involving", "heavily"],
+        answers: { b1: "team", b2: "participating", b3: "same", b4: "widely", b5: "core" }
+      },
+      {
+        title: "Dolphins",
+        type: "FIB_R",
+        readingIndex: 8,
+        instruction: "Drag words from the box below to the appropriate place in the text.",
+        text: "Dolphins are marine mammals found all over the world. There are many [b1] species. They are well-known as intelligent creatures and seem to [b2] with one another in sophisticated ways. Dolphins are [b3] animals in that they live in groups. These can [b4] in size from five to several hundred. They often hunt in groups and work together to [b5] the fish or squid they like to eat.",
+        pool: ["different", "communicate", "sociable", "range", "capture", "learn", "grow", "strange"],
+        answers: { b1: "different", b2: "communicate", b3: "sociable", b4: "range", b5: "capture" }
+      },
+
+      // 5. LISTENING SECTION (Overview + SST 10m + Batch 6 Questions 10m)
+      { type: "LISTENING_OVERVIEW", title: "Listening Overview" },
+      { 
+        type: "SST", 
+        title: "Summarize Spoken Text 1", 
+        audioSrc: "./audio/sst1.mp3", 
+        duration: 10 * 60 
+      },
+      {
+        type: "LFIB",
+        title: "Listening Fill in the Blanks 1",
+        listeningIndex: 1,
+        audioSrc: "./audio/lfib1.mp3",
+        prepTime: 7,
+        answers: {
+          b1: "orchestrated",
+          b2: "genome",
+          b3: "programmed",
+          b4: "essence",
+          b5: "quite"
+        }
+      },
+      {
+        type: "HIW",
+        title: "Highlight Incorrect Words 1",
+        listeningIndex: 2,
+        audioSrc: "./audio/hiw1.mp3",
+        prepTime: 10,
+        rawParagraph: "The most fascinating thing I've found from the work that we and others have done is that simple shifts can have such a big impact. Adding a couple letters to the end of a word can increase the likelihood that other people do what you ask them.\n\nSo, some researchers a couple years ago went to a local preschool, and they asked four or five-year-old kids to clean up a messy classroom. The floor was covered in pencils and toys and books, and they asked the kids for help cleaning up. For some of the kids, they used a normal method we might use. They said, \"Hey, can you help clean up?\" But for the second half of the kids, they tested a slightly different strategy. They asked them, \"Would you mind being a helper and cleaning up the classroom?\" Now, the difference between asking for help and asking for someone to be a helper is exceptionally small. It's adding two letters at the end of the word help. Yet, those two letters led to about a 50% increase in people's likelihood of helping.",
+        incorrectTargets: {
+          "simple": "subtle",
+          "pencils": "crayons",
+          "method": "approach",
+          "tested": "tried",
+          "exceptionally": "infinitesimally"
+        }
+      },
+      {
+        type: "WFD",
+        title: "Write From Dictation 1",
+        listeningIndex: 3,
+        audioSrc: "./audio/wfd1.mp3",
+        prepTime: 7,
+        sentence: "The supposed scientific benefits of space exploration are frequently questioned."
+      },
+      {
+        type: "WFD",
+        title: "Write From Dictation 2",
+        listeningIndex: 4,
+        audioSrc: "./audio/wfd2.mp3",
+        prepTime: 7,
+        sentence: "When launching a product investigating and marketing are very crucial."
+      },
+      {
+        type: "WFD",
+        title: "Write From Dictation 3",
+        listeningIndex: 5,
+        audioSrc: "./audio/wfd3.mp3",
+        prepTime: 7,
+        sentence: "A visit to the designed museum is of great value."
+      },
+      {
+        type: "WFD",
+        title: "Write From Dictation 4",
+        listeningIndex: 6,
+        audioSrc: "./audio/wfd4.mp3",
+        prepTime: 7,
+        sentence: "Honey can be used as food and health product."
+      }
+    ];
+
+    let currentStepIndex = 0;
+    let isTransitioning = false;
+
+    // Speaking Recording & Media Variables
+    let prepTimer = null;
+    let recTimer = null;
+    let currentPrepSeconds = 0;
+    let remainingRecSeconds = 0;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let micTestAudioUrl = null;
+    let testMediaRecorder = null;
+    let testAudioChunks = [];
+
+    // General Section Timers
+    let sectionTimerInterval = null;
+    let sectionSecondsLeft = 0;
+
+    // Reading Batch Timer (17 Mins)
+    let readingResponses = {};
+    let currentSelectedCard = null;
+    let draggedElementId = null;
+    let readingTimerInterval = null;
+    let readingSecondsLeft = 17 * 60;
+    let readingTimerStarted = false;
+
+    // Listening Batch Timer (10 Mins)
+    let listeningBatchTimerInterval = null;
+    let listeningBatchSecondsLeft = 10 * 60;
+    let listeningBatchTimerStarted = false;
+    let countdownInterval = null;
+    let countdownSecs = 0;
+    let hiwSelectedWords = new Set();
+    let wfdUserSubmissions = [];
+
+    const globalAudio = document.getElementById('globalAudioPlayer');
+    const beepAudio = document.getElementById('beepAudioElement');
+    const nextBtn = document.getElementById('btnNext');
+
+    /* SECURITY VERIFICATION */
+    async function verifyLicenseCode() {
+      const code = document.getElementById("licenseCodeInput").value.trim();
+      const btn = document.getElementById("verifyBtn");
+      const msg = document.getElementById("authMsg");
+
+      if (!code) {
+        msg.style.display = "block";
+        msg.style.color = "#dc2626";
+        msg.innerText = "Please enter your access code.";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "Verifying...";
+      msg.style.display = "none";
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "verify", code: code })
+        });
+        const result = await res.json();
+
+        if (result.result === "success") {
+          currentAccessCode = code;
+          document.getElementById("authOverlay").style.display = "none";
+        } else if (result.result === "expired_or_used") {
+          msg.style.display = "block";
+          msg.style.color = "#dc2626";
+          msg.innerText = "This code has already been used or has expired.";
+          btn.disabled = false;
+          btn.innerText = "Verify & Start Test";
+        } else {
+          msg.style.display = "block";
+          msg.style.color = "#dc2626";
+          msg.innerText = "Invalid access code. Please check and try again.";
+          btn.disabled = false;
+          btn.innerText = "Verify & Start Test";
+        }
+      } catch (e) {
+        msg.style.display = "block";
+        msg.style.color = "#dc2626";
+        msg.innerText = "Server connection error. Please check your internet connection.";
+        btn.disabled = false;
+        btn.innerText = "Verify & Start Test";
+      }
+    }
+
+    async function markTestFinished() {
+      if (!currentAccessCode) return;
+      try {
+        await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: JSON.stringify({ action: "finish", code: currentAccessCode })
+        });
+      } catch(e) {
+        console.error("Finish status error:", e);
+      }
+    }
+
+    function cleanWordPreserveCase(str) {
+      return str.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()?"']/g, "").trim();
+    }
+
+    function handleUserGlobalUnlock() {
+      if (!isAudioUnlocked) {
+        isAudioUnlocked = true;
+        globalAudio.load();
+      }
+    }
+
+    function playPearsonBeep() {
+      try {
+        beepAudio.currentTime = 0;
+        beepAudio.play().catch(e => console.log("Beep error:", e));
+      } catch (e) {
+        console.error("Beep error:", e);
+      }
+    }
+
+    async function initMicrophone() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        let mimeType = 'audio/ogg; codecs=opus';
+        if (!MediaRecorder.isTypeSupported(mimeType)) {
+          mimeType = 'audio/webm; codecs=opus';
+          if (!MediaRecorder.isTypeSupported(mimeType)) mimeType = '';
+        }
+        mediaRecorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream);
+        
+        mediaRecorder.ondataavailable = (e) => {
+          if (e.data.size > 0) audioChunks.push(e.data);
+        };
+
+        mediaRecorder.onstop = () => {
+          const type = mediaRecorder.mimeType || 'audio/ogg';
+          const audioBlob = new Blob(audioChunks, { type });
+          if (currentRecordingTaskTitle && currentRecordingTaskTitle !== 'Microphone Check') {
+            sendVoiceToTelegram(audioBlob, currentRecordingTaskTitle);
+          }
+          audioChunks = [];
+        };
+      } catch (err) {
+        console.error("Microphone access error:", err);
+      }
+    }
+
+    function startSectionTimer(totalSecs, onExpireCallback) {
+      clearInterval(sectionTimerInterval);
+      sectionSecondsLeft = totalSecs;
+      const display = document.getElementById('timerDisplay');
+
+      const updateDisplay = () => {
+        const m = Math.floor(sectionSecondsLeft / 60);
+        const s = sectionSecondsLeft % 60;
+        display.innerText = `⏱ ${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      };
+
+      updateDisplay();
+      sectionTimerInterval = setInterval(() => {
+        if (sectionSecondsLeft <= 0) {
+          clearInterval(sectionTimerInterval);
+          if (onExpireCallback) onExpireCallback();
+          return;
+        }
+        sectionSecondsLeft--;
+        updateDisplay();
+      }, 1000);
+    }
+
+    function startReadingContinuousTimer() {
+      if (readingTimerStarted) return;
+      readingTimerStarted = true;
+      clearInterval(sectionTimerInterval);
+
+      const display = document.getElementById('timerDisplay');
+      const updateDisplay = () => {
+        const m = Math.floor(readingSecondsLeft / 60);
+        const s = readingSecondsLeft % 60;
+        display.innerText = `⏱ ${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      };
+
+      updateDisplay();
+      readingTimerInterval = setInterval(() => {
+        if (readingSecondsLeft <= 0) {
+          clearInterval(readingTimerInterval);
+          handleNextClick();
+          return;
+        }
+        readingSecondsLeft--;
+        updateDisplay();
+      }, 1000);
+    }
+
+    function startListeningBatchContinuousTimer() {
+      if (listeningBatchTimerStarted) return;
+      listeningBatchTimerStarted = true;
+      clearInterval(sectionTimerInterval);
+
+      const display = document.getElementById('timerDisplay');
+      const updateDisplay = () => {
+        const m = Math.floor(listeningBatchSecondsLeft / 60);
+        const s = listeningBatchSecondsLeft % 60;
+        display.innerText = `⏱ ${m < 10 ? '0' : ''}${m}:${s < 10 ? '0' : ''}${s}`;
+      };
+
+      updateDisplay();
+      listeningBatchTimerInterval = setInterval(() => {
+        if (listeningBatchSecondsLeft <= 0) {
+          clearInterval(listeningBatchTimerInterval);
+          finishAllExam();
+          return;
+        }
+        listeningBatchSecondsLeft--;
+        updateDisplay();
+      }, 1000);
+    }
+
+    function renderCurrentStep() {
+      clearInterval(prepTimer);
+      clearInterval(recTimer);
+      clearInterval(countdownInterval);
+      globalAudio.pause();
+      globalAudio.currentTime = 0;
+      isTransitioning = false;
+
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
+
+      const item = examFlow[currentStepIndex];
+      const container = document.getElementById('mainContainer');
+      const pageCounter = document.getElementById('pageCounter');
+      const topTitle = document.getElementById('topSectionTitle');
+      const progBar = document.getElementById('topProgressBar');
+
+      progBar.style.width = `${((currentStepIndex + 1) / examFlow.length) * 100}%`;
+      nextBtn.disabled = false;
+      nextBtn.innerText = "Next ▶";
+      nextBtn.style.backgroundColor = "#0077c8";
+
+      // 1. MIC CHECK
+      if (item.type === "MIC_CHECK") {
+        topTitle.innerText = "Intro";
+        pageCounter.innerText = "2 of 4";
+        document.getElementById('timerDisplay').style.display = "none";
+        nextBtn.disabled = true;
+
+        container.innerHTML = `
+          <div style="max-width: 680px; margin: 0 auto; text-align: left;">
+            <div style="font-size: 13.5px; line-height: 1.6; color: #222; margin-bottom: 12px;">
+              <p>You must check your microphone before clicking next and continuing with the test.</p>
+              <ol style="list-style: none; padding: 0; margin-top: 10px;">
+                <li style="margin-bottom: 12px;"><strong>1.</strong> Make sure your Microphone is on.</li>
+                <li style="margin-bottom: 12px;"><strong>2.</strong> When you are ready, click on the Record button and say <i>"The man felt poorly so he decided to take some medicine and go to bed."</i> into the microphone.</li>
+                <li style="margin-bottom: 12px;"><strong>3.</strong> After you have spoken, click on the Stop button. Your recording is now complete.</li>
+                <li style="margin-bottom: 12px;"><strong>4.</strong> Now click on the Playback button. You should clearly hear yourself speaking.</li>
+                <li style="margin-bottom: 12px;"><strong>5.</strong> If you can not hear your voice clearly, adjust settings before clicking next.</li>
+              </ol>
+            </div>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 10px; margin-top: 20px;">
+              <div style="display: flex; gap: 8px;">
+                <button id="btnRecTest" class="btn-test" onclick="startMicCheckRec()">⏺ Record</button>
+                <button id="btnStopTest" class="btn-test" onclick="stopMicCheckRec()" disabled>⏹ Stop</button>
+                <button id="btnPlayTest" class="btn-test" onclick="playMicCheckRec()" disabled>▶ Playback</button>
+              </div>
+              <div id="micCheckStatus" class="status-box">The audio sample you recorded is acceptable</div>
+            </div>
+          </div>
+        `;
+      } 
+      // 2. READY
+      else if (item.type === "READY") {
+        topTitle.innerText = "Intro";
+        pageCounter.innerText = "4 of 4";
+        document.getElementById('timerDisplay').style.display = "none";
+
+        container.innerHTML = `
+          <div class="ready-box">
+            <div class="ready-title">Ready to start the test?</div>
+            <div class="ready-item">
+              <span style="font-size: 22px;">⏱</span>
+              <div>Starting the test will initiate the timer. You will have approximately 2 hours.</div>
+            </div>
+            <div class="ready-item">
+              <span style="font-size: 22px;">💾</span>
+              <div>You can pause the test at any time and resume by using the "Save/Exit" Button</div>
+            </div>
+          </div>
+        `;
+      } 
+      // 3. SPEAKING OVERVIEW
+      else if (item.type === "SPEAKING_OVERVIEW") {
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = "1 of 1";
+        document.getElementById('timerDisplay').style.display = "inline";
+        startSectionTimer(118, () => handleNextClick());
+
+        container.innerHTML = `
+          <div style="max-width: 950px; text-align: left;">
+            <div style="font-size: 14px; font-weight: bold; margin-bottom: 8px;">Part 1: Speaking and Writing</div>
+            <div style="font-size: 13.5px; color: #333; margin-bottom: 12px;">4 sections / 77 minutes</div>
+            <ul style="list-style: disc; margin-left: 20px; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
+              <li>In this part you will be tested on your speaking and writing skills</li>
+              <li>Read the instructions to each question carefully and answer as directed</li>
+              <li>Please speak clearly and directly into the microphone</li>
+              <li>In the writing sections, please use appropriate punctuation and capitalization.</li>
+            </ul>
+            <table class="pearson-table">
+              <thead><tr><th colspan="3">Part 1: Speaking and Writing</th></tr><tr><th>Section</th><th>Item Type</th><th>Time allowed</th></tr></thead>
+              <tbody>
+                <tr><td>Section 1</td><td>Personal Introduction</td><td>1 minute</td></tr>
+                <tr><td rowspan="7">Section 2</td><td>Read aloud</td><td rowspan="7">34 Minutes</td></tr>
+                <tr><td>Repeat sentence</td></tr>
+                <tr><td>Describe image</td></tr>
+                <tr><td>Re-tell lecture</td></tr>
+                <tr><td>Answer short question</td></tr>
+                <tr><td>Summarize group discussion</td></tr>
+                <tr><td>Responding to a situation</td></tr>
+                <tr><td>Section 3</td><td>Summarize written text</td><td>10 minutes</td></tr>
+                <tr><td>Section 4</td><td>Essay</td><td>20 minutes</td></tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      // 4. PERSONAL INTRO
+      else if (item.type === "PERSONAL_INTRO") {
+        clearInterval(sectionTimerInterval);
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = "1 of 2";
+        document.getElementById('timerDisplay').style.display = "inline";
+        document.getElementById('timerDisplay').innerText = "⏱ 00:55";
+
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">Read the prompt below. In 25 seconds, you must reply in your own words, as naturally and clearly as possible. You have 30 seconds to record your response.</div>
+            <div style="font-size: 13.5px; margin-bottom: 10px;">Please introduce yourself. For example, you could talk about one or more of the following:</div>
+            <ul style="list-style: disc; margin-left: 25px; margin-bottom: 25px; font-size: 13px; line-height: 1.7;">
+              <li>Your interests</li>
+              <li>Your plans for future study</li>
+              <li>Why you want to study abroad</li>
+              <li>Why you need to learn English</li>
+              <li>Why you chose the Pearson Test of English</li>
+            </ul>
+            <div class="recorder-box">
+              <div class="recorder-header">Audio Recorder</div>
+              <div class="recorder-status" id="recStatus">Recording in ${item.prepTime}</div>
+              <div class="recorder-bottom">
+                <div class="rec-dot" id="recDot"></div>
+                <span class="rec-time" id="recTimeText">0:${item.recTime}</span>
+                <div class="rec-bar-wrap"><div class="rec-bar-fill" id="recBarFill"></div></div>
+              </div>
+            </div>
+          </div>
+        `;
+        startGenericPreparation(item.prepTime, item.recTime);
+      }
+      // 5. READ ALOUD
+      else if (item.type === "RA") {
+        if (!sectionTimerInterval || currentStepIndex === 4) {
+          startSectionTimer(34 * 60, () => handleNextClick());
+        }
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = `${currentStepIndex - 3} of 14`;
+
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">Look at the text below. In 40 seconds, you must read this text aloud as naturally and clearly as possible. You have 40 seconds to read aloud.</div>
+            <div class="recorder-box">
+              <div class="recorder-header">Audio Recorder</div>
+              <div class="recorder-status" id="recStatus">Recording in ${item.prepTime}</div>
+              <div class="recorder-bottom">
+                <div class="rec-dot" id="recDot"></div>
+                <span class="rec-time" id="recTimeText">0:${item.recTime}</span>
+                <div class="rec-bar-wrap"><div class="rec-bar-fill" id="recBarFill"></div></div>
+              </div>
+            </div>
+            <div class="prompt-text">${item.text}</div>
+          </div>
+        `;
+        startGenericPreparation(item.prepTime, item.recTime);
+      }
+      // 6. REPEAT SENTENCE
+      else if (item.type === "RS") {
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = `${currentStepIndex - 3} of 14`;
+
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">You will hear a sentence. Please repeat the sentence exactly as you hear it. You will hear the sentence only once.</div>
+            <div class="player-box">
+              <div class="player-status-bar">
+                <span class="player-play-icon" id="playerIcon">▶</span>
+                <span id="playerTime">0:00 / 0:00</span>
+                <div class="player-bar-wrap"><div class="player-bar-fill" id="playerBarFill"></div></div>
+                <span>🔊</span>
+              </div>
+            </div>
+            <div class="recorder-box">
+              <div class="recorder-header">Audio Recorder</div>
+              <div class="recorder-status" id="recStatus">Status: Playing Audio</div>
+              <div class="recorder-bottom">
+                <div class="rec-dot" id="recDot"></div>
+                <span class="rec-time" id="recTimeText">0:${item.recTime}</span>
+                <div class="rec-bar-wrap"><div class="rec-bar-fill" id="recBarFill"></div></div>
+              </div>
+            </div>
+          </div>
+        `;
+        playAudioPrompt(item.audioSrc, 0, item.recTime);
+      }
+      // 7. DESCRIBE IMAGE
+      else if (item.type === "DI") {
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = `${currentStepIndex - 3} of 14`;
+
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">Look at the graph below. In 25 seconds, please speak into the microphone and describe in detail what the graph is showing. You will have 40 seconds to give your response.</div>
+            <div class="split-layout">
+              <div class="left-panel">
+                <div class="image-box"><img src="${item.imgSrc}" alt="Describe Image Graph"></div>
+              </div>
+              <div class="right-panel">
+                <div class="recorder-box">
+                  <div class="recorder-header">Audio Recorder</div>
+                  <div class="recorder-status" id="recStatus">Recording in ${item.prepTime}</div>
+                  <div class="recorder-bottom">
+                    <div class="rec-dot" id="recDot"></div>
+                    <span class="rec-time" id="recTimeText">0:${item.recTime}</span>
+                    <div class="rec-bar-wrap"><div class="rec-bar-fill" id="recBarFill"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        startGenericPreparation(item.prepTime, item.recTime);
+      }
+      // 8. RE-TELL LECTURE
+      else if (item.type === "RL") {
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = `${currentStepIndex - 3} of 14`;
+
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">You will hear a speech. After listening to the speech, in 10 seconds, please speak into the microphone and retell what you have just heard from the speech in your own words. You will have 40 seconds to give your response.</div>
+            <div class="split-layout">
+              <div class="left-panel"></div>
+              <div class="right-panel">
+                <div class="player-box">
+                  <div class="player-status-bar">
+                    <span class="player-play-icon" id="playerIcon">▶</span>
+                    <span id="playerTime">0:00 / 0:00</span>
+                    <div class="player-bar-wrap"><div class="player-bar-fill" id="playerBarFill"></div></div>
+                    <span>🔊</span>
+                  </div>
+                </div>
+                <div class="recorder-box">
+                  <div class="recorder-header">Audio Recorder</div>
+                  <div class="recorder-status" id="recStatus">Status: Playing Audio</div>
+                  <div class="recorder-bottom">
+                    <div class="rec-dot" id="recDot"></div>
+                    <span class="rec-time" id="recTimeText">0:${item.recTime}</span>
+                    <div class="rec-bar-wrap"><div class="rec-bar-fill" id="recBarFill"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        playAudioPrompt(item.audioSrc, item.prepTime, item.recTime);
+      }
+      // 9. SUMMARIZE GROUP DISCUSSION
+      else if (item.type === "SGD") {
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = `${currentStepIndex - 3} of 14`;
+
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">You will hear three people having a discussion. When you hear the beep, summarize the whole discussion. You will have 10 seconds to prepare and 2 minutes to give your response.</div>
+            <div class="split-layout">
+              <div class="left-panel">
+                <div style="width: 260px;">
+                  <svg viewBox="0 0 400 320" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="20" y="30" width="100" height="60" rx="8" fill="#111" />
+                    <polygon points="50,90 60,115 75,90" fill="#111" />
+                    <rect x="110" y="5" width="95" height="55" rx="8" fill="#111" />
+                    <polygon points="150,60 160,85 170,60" fill="#111" />
+                    <rect x="195" y="45" width="115" height="65" rx="8" fill="#111" />
+                    <polygon points="215,110 205,135 235,110" fill="#111" />
+                    <circle cx="160" cy="140" r="30" fill="#111" />
+                    <path d="M110,240 C110,185 210,185 210,240 Z" fill="#111" />
+                    <circle cx="90" cy="180" r="35" fill="#111" />
+                    <path d="M30,300 C30,230 150,230 150,300 Z" fill="#111" />
+                    <circle cx="230" cy="185" r="35" fill="#111" />
+                    <path d="M170,300 C170,235 290,235 290,300 Z" fill="#111" />
+                  </svg>
+                </div>
+              </div>
+              <div class="right-panel">
+                <div class="player-box">
+                  <div class="player-status-bar">
+                    <span class="player-play-icon" id="playerIcon">▶</span>
+                    <span id="playerTime">0:00 / 0:00</span>
+                    <div class="player-bar-wrap"><div class="player-bar-fill" id="playerBarFill"></div></div>
+                    <span>🔊</span>
+                  </div>
+                </div>
+                <div class="recorder-box">
+                  <div class="recorder-header">Audio Recorder</div>
+                  <div class="recorder-status" id="recStatus">Status: Playing Audio</div>
+                  <div class="recorder-bottom">
+                    <div class="rec-dot" id="recDot"></div>
+                    <span class="rec-time" id="recTimeText">2:00</span>
+                    <div class="rec-bar-wrap"><div class="rec-bar-fill" id="recBarFill"></div></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        playAudioPrompt(item.audioSrc, item.prepTime, item.recTime);
+      }
+      // 10. RESPOND TO A SITUATION
+      else if (item.type === "RTS") {
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = `${currentStepIndex - 3} of 14`;
+        nextBtn.innerText = "Next ▶";
+
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">Listen to and read a description of a situation. You will have 10 seconds to think about your answer. Then you will hear a beep. You will have 40 seconds to answer the question. Please answer as completely as you can.</div>
+            <div style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">${item.text}</div>
+            <div class="player-box">
+              <div class="player-status-bar">
+                <span class="player-play-icon" id="playerIcon">▶</span>
+                <span id="playerTime">0:00 / 0:00</span>
+                <div class="player-bar-wrap"><div class="player-bar-fill" id="playerBarFill"></div></div>
+                <span>🔊</span>
+              </div>
+            </div>
+            <div class="recorder-box">
+              <div class="recorder-header">Audio Recorder</div>
+              <div class="recorder-status" id="recStatus">Status: Playing Audio</div>
+              <div class="recorder-bottom">
+                <div class="rec-dot" id="recDot"></div>
+                <span class="rec-time" id="recTimeText">0:${item.recTime}</span>
+                <div class="rec-bar-wrap"><div class="rec-bar-fill" id="recBarFill"></div></div>
+              </div>
+            </div>
+          </div>
+        `;
+        playAudioPrompt(item.audioSrc, item.prepTime, item.recTime);
+      }
+      // 11. WRITING TRANSITION
+      else if (item.type === "WRITING_TRANSITION") {
+        clearInterval(sectionTimerInterval);
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = "33 of 33";
+        document.getElementById('timerDisplay').innerText = "⏱ 03:10";
+
+        container.innerHTML = `
+          <div><p style="font-size: 13px; color: #222;">Please click <strong>"next"</strong> to proceed to the next section.</p></div>
+        `;
+      }
+      // 12. SWT
+      else if (item.type === "SWT") {
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = "1 of 1";
+        internalClipboard = "";
+        startSectionTimer(item.duration, () => handleNextClick());
+
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">Read the passage below and summarize it using one sentence. Type your response in the box at the bottom of the screen. You have 10 minutes to finish this task. Your response will be judged on the quality of your writing and on how well your response presents the key points in the passage.</div>
+            <div class="passage-text">${item.text}</div>
+            <div class="editor-container">
+              <div class="editor-toolbar">
+                <div class="toolbar-left">
+                  <button class="btn-tool" onclick="editorCut('swtText')">Cut</button>
+                  <button class="btn-tool" onclick="editorCopy('swtText')">Copy</button>
+                  <button class="btn-tool" onclick="editorPaste('swtText')">Paste</button>
+                </div>
+                <div class="word-count" id="swtWordCount">0 Word(s)</div>
+              </div>
+              <textarea id="swtText" class="editor-textarea" oninput="updateWordCount('swtText', 'swtWordCount')" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;" oncontextmenu="return false;"></textarea>
+            </div>
+          </div>
+        `;
+      }
+      // 13. WE
+      else if (item.type === "WE") {
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = "1 of 1";
+        internalClipboard = "";
+        startSectionTimer(item.duration, () => handleNextClick());
+
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">You will have 20 minutes to plan, write and revise an essay about the topic below. Your response will be judged on how well you develop a position, organize your ideas, present supporting details, and control the elements of standard written English. You should write 200-300 words.</div>
+            <div class="passage-text" style="font-weight: 500;">${item.text}</div>
+            <div class="editor-container">
+              <div class="editor-toolbar">
+                <div class="toolbar-left">
+                  <button class="btn-tool" onclick="editorCut('weText')">Cut</button>
+                  <button class="btn-tool" onclick="editorCopy('weText')">Copy</button>
+                  <button class="btn-tool" onclick="editorPaste('weText')">Paste</button>
+                </div>
+                <div class="word-count" id="weWordCount">0 Word(s)</div>
+              </div>
+              <textarea id="weText" class="editor-textarea essay" oninput="updateWordCount('weText', 'weWordCount')" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;" oncontextmenu="return false;"></textarea>
+            </div>
+          </div>
+        `;
+      }
+      // 14. READING OVERVIEW
+      else if (item.type === "READING_OVERVIEW") {
+        clearInterval(sectionTimerInterval);
+        topTitle.innerText = "Reading";
+        pageCounter.innerText = "Part 2: Reading";
+        document.getElementById('timerDisplay').innerText = "⏱ 17:00";
+
+        container.innerHTML = `
+          <div style="max-width: 950px; text-align: left;">
+            <h3 style="margin-bottom: 15px;">Part 2: Reading</h3>
+            <p style="color: #444; margin-bottom: 10px;">1 section / 17 Minutes</p>
+            <ul style="margin-left: 20px; line-height: 1.8; color: #444;">
+              <li>In this part you will be tested on your reading skills.</li>
+              <li>Read the instructions to each question carefully and answer as directed.</li>
+            </ul>
+            <input type="text" id="candidateNameInput" class="name-input" placeholder="Candidate Name..." value="${studentName}">
+            <table class="pearson-table" style="margin-top: 20px;">
+              <thead><tr><th>Item Type</th><th>Time allowed</th></tr></thead>
+              <tbody>
+                <tr><td>Fill in the blanks (dropdown)</td><td rowspan="3">17 Minutes</td></tr>
+                <tr><td>Re-order paragraphs</td></tr>
+                <tr><td>Fill in the blanks (drag and drop)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      // 15. READING QUESTIONS (FIB_RW, RO, FIB_R)
+      else if (item.type === "FIB_RW" || item.type === "RO" || item.type === "FIB_R") {
+        topTitle.innerText = "Reading";
+        pageCounter.innerText = `${item.readingIndex} of 8`;
+
+        if (!readingTimerStarted) {
+          startReadingContinuousTimer();
+        }
+
+        let html = `<div class="instruction">${item.instruction}</div><div class="content-box" style="font-size: 15px; line-height: 2.3; text-align: left;">`;
+
+        if (item.type === "FIB_RW") {
+          let renderedText = item.text;
+          Object.keys(item.dropdowns).forEach(key => {
+            let selectHtml = `<select id="${key}"><option value="">Select...</option>`;
+            item.dropdowns[key].forEach(opt => selectHtml += `<option value="${opt}">${opt}</option>`);
+            selectHtml += `</select>`;
+            renderedText = renderedText.replace(`{${key}}`, selectHtml);
+          });
+          html += renderedText;
+        } 
+        else if (item.type === "RO") {
+          const rowCount = item.items.length;
+          let sourceSlots = '';
+          let targetSlots = '';
+
+          for (let i = 0; i < rowCount; i++) {
+            const card = item.items[i];
+            sourceSlots += `
+              <div class="ro-slot" data-slot-id="src_${i}" ondragover="allowDropRO(event)" ondrop="handleDropRO(event)">
+                <div class="ro-card" id="ro_card_${card.id}" draggable="true" ondragstart="handleDragStartRO(event)" onclick="selectROCard(this)">
+                  ${card.text}
+                </div>
+              </div>
+            `;
+            targetSlots += `<div class="ro-slot" data-slot-id="tgt_${i}" ondragover="allowDropRO(event)" ondrop="handleDropRO(event)"></div>`;
+          }
+
+          html += `
+            <div class="ro-wrapper">
+              <div class="ro-column">
+                <div class="ro-header">Source</div>
+                <div class="ro-table" id="roSourceTable">${sourceSlots}</div>
+              </div>
+              <div class="ro-mid-arrows">
+                <button class="ro-arrow-btn" onclick="moveSelectedCard('to_target')">▶</button>
+                <button class="ro-arrow-btn" onclick="moveSelectedCard('to_source')">◀</button>
+              </div>
+              <div class="ro-column">
+                <div class="ro-header">Target</div>
+                <div class="ro-table" id="roTargetTable">${targetSlots}</div>
+              </div>
+              <div class="ro-side-arrows">
+                <button class="ro-arrow-btn" onclick="shiftCardOrder(-1)">▲</button>
+                <button class="ro-arrow-btn" onclick="shiftCardOrder(1)">▼</button>
+              </div>
+            </div>
+          `;
+        } 
+        else if (item.type === "FIB_R") {
+          let renderedText = item.text;
+          Object.keys(item.answers).forEach(key => {
+            renderedText = renderedText.replace(`[${key}]`, `<span class="drop-target" id="${key}" ondragover="allowDropFIB(event)" ondrop="handleDropFIB(event)"></span>`);
+          });
+          html += renderedText + `
+            <div class="word-pool" id="wordPool" ondragover="allowDropFIB(event)" ondrop="handleDropPool(event)">
+              ${item.pool.map((word, idx) => `
+                <span class="word-chip" id="chip_${idx}" draggable="true" ondragstart="handleDragStartFIB(event)">${word}</span>
+              `).join('')}
+            </div>
+          `;
+        }
+
+        html += `</div>`;
+        container.innerHTML = html;
+      }
+      // 16. LISTENING OVERVIEW
+      else if (item.type === "LISTENING_OVERVIEW") {
+        clearInterval(readingTimerInterval);
+        topTitle.innerText = "Listening";
+        pageCounter.innerText = "1 of 1";
+        document.getElementById('timerDisplay').style.display = "inline";
+        startSectionTimer(118, () => handleNextClick());
+
+        container.innerHTML = `
+          <div style="max-width: 950px; text-align: left;">
+            <div style="font-size: 14px; font-weight: bold; margin-bottom: 8px;">Part 3: Listening</div>
+            <div style="font-size: 13.5px; color: #333; margin-bottom: 12px;">2 sections / 20 minutes</div>
+            <ul style="list-style: disc; margin-left: 20px; font-size: 13px; line-height: 1.6; margin-bottom: 20px;">
+              <li>In this part you will be tested mainly on your listening skills</li>
+              <li>Read the instructions to each question carefully and answer as directed</li>
+            </ul>
+            <table class="pearson-table">
+              <thead><tr><th colspan="3">Part 3: Listening</th></tr><tr><th>Section</th><th>Item Type</th><th>Time allowed</th></tr></thead>
+              <tbody>
+                <tr><td>Section 1</td><td>Summarize spoken text</td><td>10 minutes</td></tr>
+                <tr>
+                  <td rowspan="3">Section 2</td>
+                  <td>Fill in the blanks (type in)</td>
+                  <td rowspan="3">10 Minutes (6 Questions)</td>
+                </tr>
+                <tr><td>Highlight incorrect words</td></tr>
+                <tr><td>Write from dictation (4 Questions)</td></tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      }
+      // 17. SST
+      else if (item.type === "SST") {
+        topTitle.innerText = "Listening";
+        pageCounter.innerText = "1 of 1";
+        internalClipboard = "";
+        startSectionTimer(item.duration, () => handleNextClick());
+
+        container.innerHTML = `
+          <div class="instruction">
+            You will hear a short lecture. Write a summary for a fellow student who was not present at the lecture. You should write 50-70 words.<br>
+            You have 10 minutes to finish this task. Your response will be judged on the quality of your writing and on how well your response presents the key points presented in the lecture.
+          </div>
+          <div class="lst-player-box">
+            <div class="lst-player-header">Audio Player</div>
+            <div class="lst-player-status" id="lstStatus">Playing</div>
+            <div class="lst-player-bottom">
+              <span id="lstPlayerIcon">⏸</span>
+              <span id="lstPlayerTime">0:00 / 0:00</span>
+              <div class="player-bar-wrap"><div class="player-bar-fill" id="lstBarFill"></div></div>
+              <span>🔊</span>
+            </div>
+          </div>
+          <div class="editor-container">
+            <div class="editor-toolbar">
+              <div class="toolbar-left">
+                <button class="btn-tool" onclick="editorCut('sstText')">Cut</button>
+                <button class="btn-tool" onclick="editorCopy('sstText')">Copy</button>
+                <button class="btn-tool" onclick="editorPaste('sstText')">Paste</button>
+              </div>
+              <div class="word-count" id="sstWordCount">0 Word(s)</div>
+            </div>
+            <textarea id="sstText" class="editor-textarea" oninput="updateWordCount('sstText', 'sstWordCount')" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;" oncontextmenu="return false;" placeholder=""></textarea>
+          </div>
+        `;
+        playListeningAudioPrompt(item.audioSrc, false);
+      }
+      // 18. LFIB (1 of 6)
+      else if (item.type === "LFIB") {
+        topTitle.innerText = "Listening";
+        pageCounter.innerText = `${item.listeningIndex} of 6`;
+        startListeningBatchContinuousTimer();
+        nextBtn.disabled = true;
+
+        container.innerHTML = `
+          <div class="instruction">You will hear a recording. Type the missing words in each blank.</div>
+          <div class="lst-player-box">
+            <div class="lst-player-header">Audio Player</div>
+            <div class="lst-player-status" id="lstStatus">Beginning in ${item.prepTime}</div>
+            <div class="lst-player-bottom">
+              <span id="lstPlayerIcon">▶</span>
+              <span id="lstPlayerTime">0:00 / 0:00</span>
+              <div class="player-bar-wrap"><div class="player-bar-fill" id="lstBarFill"></div></div>
+              <span>🔊</span>
+            </div>
+          </div>
+          <div class="lfib-content">
+            And an emotion consists of a very well <input type="text" id="blank1" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> set of alterations in the body that has, as a general purpose, making life more survivable by taking care of a danger, of taking care of an opportunity, either/or, or something in between. And it’s something that is set in our <input type="text" id="blank2" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> and that we all have with a certain <input type="text" id="blank3" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> nature that is modified by our experience so individually we have variations on the pattern. But in <input type="text" id="blank4" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;">, your emotion of joy and mine are going to be extremely similar. We may express them physically slightly differently, and it’s of course graded depending on the circumstance, but the essence of the process is going to be the same, unless one of us is not <input type="text" id="blank5" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> well put together and is missing something, otherwise it’s going to be the same. And it’s going to be the same across even other species.
+          </div>
+        `;
+        startListeningCountdownAndPlay(item.audioSrc, item.prepTime);
+      }
+      // 19. HIW (2 of 6)
+      else if (item.type === "HIW") {
+        topTitle.innerText = "Listening";
+        pageCounter.innerText = `${item.listeningIndex} of 6`;
+        startListeningBatchContinuousTimer();
+        nextBtn.disabled = true;
+        hiwSelectedWords.clear();
+
+        container.innerHTML = `
+          <div class="instruction">You will hear a recording. Below is a transcription of the recording. Some words in the transcription differ from what the speakers said. Please click on the words that are different.</div>
+          <div class="lst-player-box">
+            <div class="lst-player-header">Audio Player</div>
+            <div class="lst-player-status" id="lstStatus">Beginning in ${item.prepTime}</div>
+            <div class="lst-player-bottom">
+              <span id="lstPlayerIcon">▶</span>
+              <span id="lstPlayerTime">0:00 / 0:00</span>
+              <div class="player-bar-wrap"><div class="player-bar-fill" id="lstBarFill"></div></div>
+              <span>🔊</span>
+            </div>
+          </div>
+          <div class="hiw-passage-box" id="hiwPassage"></div>
+        `;
+        renderHIWText(item.rawParagraph);
+        startListeningCountdownAndPlay(item.audioSrc, item.prepTime);
+      }
+      // 20 to 23. WFD 1-4 (3 to 6 of 6)
+      else if (item.type === "WFD") {
+        topTitle.innerText = "Listening";
+        pageCounter.innerText = `${item.listeningIndex} of 6`;
+        startListeningBatchContinuousTimer();
+        nextBtn.disabled = true;
+
+        if (item.listeningIndex === 6) {
+          nextBtn.innerText = "Submit Exam ✅";
+          nextBtn.style.backgroundColor = "#28a745";
+        }
+
+        container.innerHTML = `
+          <div class="instruction">You will hear a sentence. Type the sentence in the box below exactly as you hear it. Write as much of the sentence as you can. You will hear the sentence only once.</div>
+          <div class="lst-player-box">
+            <div class="lst-player-header">Audio Player</div>
+            <div class="lst-player-status" id="lstStatus">Beginning in ${item.prepTime}</div>
+            <div class="lst-player-bottom">
+              <span id="lstPlayerIcon">▶</span>
+              <span id="lstPlayerTime">0:00 / 0:00</span>
+              <div class="player-bar-wrap"><div class="player-bar-fill" id="lstBarFill"></div></div>
+              <span>🔊</span>
+            </div>
+          </div>
+          <input type="text" id="wfdInput" class="wfd-input-box" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;" oncontextmenu="return false;" placeholder="" autofocus>
+        `;
+        startListeningCountdownAndPlay(item.audioSrc, item.prepTime);
+      }
+    }
+
+    /* SPEAKING & GENERAL RECORDING HANDLERS */
+    function startGenericPreparation(prepSecs, recSecs) {
+      currentPrepSeconds = prepSecs;
+      document.getElementById('recStatus').innerText = `Recording in ${currentPrepSeconds}`;
+      document.getElementById('recDot').classList.remove('active');
+      document.getElementById('recBarFill').style.width = '0%';
+      document.getElementById('recTimeText').innerText = formatSeconds(recSecs);
+
+      prepTimer = setInterval(() => {
+        currentPrepSeconds--;
+        if (currentPrepSeconds > 0) {
+          document.getElementById('recStatus').innerText = `Recording in ${currentPrepSeconds}`;
+        } else {
+          clearInterval(prepTimer);
+          playPearsonBeep();
+          setTimeout(() => startGenericRecording(recSecs), 350);
+        }
+      }, 1000);
+    }
+
+    function startGenericRecording(recSecs) {
+      const item = examFlow[currentStepIndex];
+      currentRecordingTaskTitle = item ? item.title : "Speaking Task";
+      remainingRecSeconds = recSecs;
+      document.getElementById('recStatus').innerText = "Recording";
+      document.getElementById('recDot').classList.add('active');
+      audioChunks = [];
+
+      if (mediaRecorder && mediaRecorder.state === "inactive") {
+        mediaRecorder.start();
+      }
+
+      recTimer = setInterval(() => {
+        remainingRecSeconds--;
+        const elapsed = recSecs - remainingRecSeconds;
+        const pct = (elapsed / recSecs) * 100;
+
+        document.getElementById('recBarFill').style.width = `${pct}%`;
+        document.getElementById('recTimeText').innerText = formatSeconds(remainingRecSeconds);
+
+        if (remainingRecSeconds <= 0) {
+          clearInterval(recTimer);
+          handleNextClick();
+        }
+      }, 1000);
+    }
+
+    function playAudioPrompt(audioSrc, prepSecs, recSecs) {
+      globalAudio.src = audioSrc;
+      globalAudio.load();
+
+      let playStarted = false;
+      globalAudio.oncanplaythrough = () => {
+        if (!playStarted) {
+          playStarted = true;
+          globalAudio.play().catch(e => console.log("Audio error:", e));
+        }
+      };
+
+      globalAudio.ontimeupdate = () => {
+        const cur = globalAudio.currentTime || 0;
+        const dur = globalAudio.duration || 1;
+        const pct = (cur / dur) * 100;
+        const pFill = document.getElementById('playerBarFill');
+        const pTime = document.getElementById('playerTime');
+        if (pFill) pFill.style.width = `${pct}%`;
+        if (pTime) {
+          const cM = Math.floor(cur / 60); const cS = Math.floor(cur % 60);
+          const dM = Math.floor(dur / 60); const dS = Math.floor(dur % 60);
+          pTime.innerText = `${cM}:${cS < 10 ? '0' : ''}${cS} / ${dM}:${dS < 10 ? '0' : ''}${dS}`;
+        }
+      };
+
+      globalAudio.onended = () => {
+        const icon = document.getElementById('playerIcon');
+        if (icon) icon.innerText = '▶';
+        if (prepSecs > 0) {
+          startGenericPreparation(prepSecs, recSecs);
+        } else {
+          playPearsonBeep();
+          setTimeout(() => startGenericRecording(recSecs), 350);
+        }
+      };
+    }
+
+    function formatSeconds(secs) {
+      const m = Math.floor(secs / 60);
+      const s = secs % 60;
+      return `${m}:${s < 10 ? '0' : ''}${s}`;
+    }
+
+    /* LISTENING AUDIO PLAYER HANDLERS */
+    function startListeningCountdownAndPlay(audioSrc, prepSecs) {
+      countdownSecs = prepSecs;
+      const statusEl = document.getElementById('lstStatus');
+      statusEl.style.color = '#d9381e';
+      statusEl.innerText = `Beginning in ${countdownSecs}`;
+
+      countdownInterval = setInterval(() => {
+        countdownSecs--;
+        if (countdownSecs > 0) {
+          statusEl.innerText = `Beginning in ${countdownSecs}`;
+        } else {
+          clearInterval(countdownInterval);
+          statusEl.innerText = "Playing";
+          playListeningAudioPrompt(audioSrc, true);
+        }
+      }, 1000);
+    }
+
+    function playListeningAudioPrompt(audioSrc, unlockNextOnEnd) {
+      globalAudio.src = audioSrc;
+      globalAudio.load();
+
+      let playStarted = false;
+      globalAudio.oncanplaythrough = () => {
+        if (!playStarted) {
+          playStarted = true;
+          globalAudio.play().catch(e => console.log("Audio Play:", e));
+          const pIcon = document.getElementById('lstPlayerIcon');
+          if (pIcon) pIcon.innerText = '⏸';
+        }
+      };
+
+      globalAudio.ontimeupdate = () => {
+        const cur = globalAudio.currentTime || 0;
+        const dur = globalAudio.duration || 1;
+        const pct = (cur / dur) * 100;
+        const pFill = document.getElementById('lstBarFill');
+        const pTime = document.getElementById('lstPlayerTime');
+        if (pFill) pFill.style.width = `${pct}%`;
+        if (pTime) {
+          const cM = Math.floor(cur / 60); const cS = Math.floor(cur % 60);
+          const dM = Math.floor(dur / 60); const dS = Math.floor(dur % 60);
+          pTime.innerText = `${cM}:${cS < 10 ? '0' : ''}${cS} / ${dM}:${dS < 10 ? '0' : ''}${dS}`;
+        }
+      };
+
+      globalAudio.onended = () => {
+        const icon = document.getElementById('lstPlayerIcon');
+        const st = document.getElementById('lstStatus');
+        if (icon) icon.innerText = '▶';
+        if (st) { st.innerText = 'Completed'; st.style.color = '#333'; }
+        if (unlockNextOnEnd) {
+          nextBtn.disabled = false;
+        }
+      };
+    }
+
+    function renderHIWText(rawText) {
+      const container = document.getElementById('hiwPassage');
+      const paragraphs = rawText.split('\n\n');
+      let html = '';
+
+      paragraphs.forEach((pText, pIdx) => {
+        const tokens = pText.split(/(\s+)/);
+        let pHTML = '<p style="margin-bottom: ' + (pIdx === 0 ? '14px' : '0') + ';">';
+        tokens.forEach(tok => {
+          if (tok.trim() === '') {
+            pHTML += tok;
+          } else {
+            const clean = tok.replace(/^[^\w]+|[^\w]+$/g, '').toLowerCase();
+            pHTML += `<span class="hiw-word" data-word="${clean}" onclick="toggleHIWWord(this)">${tok}</span>`;
+          }
+        });
+        pHTML += '</p>';
+        html += pHTML;
+      });
+      container.innerHTML = html;
+    }
+
+    function toggleHIWWord(el) {
+      el.classList.toggle('selected');
+      const clean = el.getAttribute('data-word');
+      if (el.classList.contains('selected')) {
+        hiwSelectedWords.add(clean);
+      } else {
+        hiwSelectedWords.delete(clean);
+      }
+    }
+
+    /* READING RO & DRAG DROP HELPERS */
+    function selectROCard(cardEl) {
+      document.querySelectorAll('.ro-card').forEach(c => c.classList.remove('selected'));
+      currentSelectedCard = cardEl;
+      cardEl.classList.add('selected');
+    }
+
+    function handleDragStartRO(e) {
+      e.dataTransfer.setData("text/plain", e.target.id);
+      selectROCard(e.target);
+    }
+
+    function allowDropRO(e) {
+      e.preventDefault();
+      const slot = e.target.closest('.ro-slot');
+      if (slot) slot.classList.add('drag-over');
+    }
+
+    function handleDropRO(e) {
+      e.preventDefault();
+      document.querySelectorAll('.ro-slot').forEach(s => s.classList.remove('drag-over'));
+      const slot = e.target.closest('.ro-slot');
+      const cardId = e.dataTransfer.getData("text/plain");
+      const card = document.getElementById(cardId);
+
+      if (slot && card) {
+        if (slot.firstElementChild && slot.firstElementChild !== card) {
+          const existingCard = slot.firstElementChild;
+          const oldParent = card.parentElement;
+          if (oldParent) oldParent.appendChild(existingCard);
+        }
+        slot.appendChild(card);
+      }
+    }
+
+    function moveSelectedCard(direction) {
+      if (!currentSelectedCard) return;
+      const targetTable = direction === 'to_target' ? document.getElementById('roTargetTable') : document.getElementById('roSourceTable');
+      const emptySlot = Array.from(targetTable.querySelectorAll('.ro-slot')).find(s => s.children.length === 0);
+      if (emptySlot) emptySlot.appendChild(currentSelectedCard);
+    }
+
+    function shiftCardOrder(offset) {
+      if (!currentSelectedCard) return;
+      const currentSlot = currentSelectedCard.parentElement;
+      if (!currentSlot || !currentSlot.dataset.slotId.startsWith('tgt_')) return;
+
+      const targetSlots = Array.from(document.querySelectorAll('#roTargetTable .ro-slot'));
+      const currIdx = targetSlots.indexOf(currentSlot);
+      const newIdx = currIdx + offset;
+
+      if (newIdx >= 0 && newIdx < targetSlots.length) {
+        const destSlot = targetSlots[newIdx];
+        const destCard = destSlot.firstElementChild;
+        destSlot.appendChild(currentSelectedCard);
+        if (destCard) currentSlot.appendChild(destCard);
+      }
+    }
+
+    function handleDragStartFIB(e) {
+      draggedElementId = e.target.id;
+      e.dataTransfer.setData("text/plain", e.target.id);
+    }
+
+    function allowDropFIB(e) { e.preventDefault(); }
+
+    function handleDropFIB(e) {
+      e.preventDefault();
+      const dropZone = e.target.closest('.drop-target');
+      if (dropZone && draggedElementId) {
+        const el = document.getElementById(draggedElementId);
+        if (el && el.classList.contains('word-chip')) {
+          if (dropZone.children.length > 0) {
+            document.getElementById('wordPool').appendChild(dropZone.children[0]);
+          }
+          dropZone.appendChild(el);
+        }
+      }
+    }
+
+    function handleDropPool(e) {
+      e.preventDefault();
+      if (draggedElementId) {
+        const el = document.getElementById(draggedElementId);
+        if (el && el.classList.contains('word-chip')) {
+          document.getElementById('wordPool').appendChild(el);
+        }
+      }
+    }
+
+    /* WRITING & CLIPBOARD HELPERS */
+    function preventKeyboardShortcuts(e) {
+      if ((e.ctrlKey || e.metaKey) && ['c', 'v', 'x', 'a'].includes(e.key.toLowerCase())) {
+        if (e.key.toLowerCase() === 'a') return;
+        e.preventDefault();
+      }
+      if (e.shiftKey && e.key === "Insert") e.preventDefault();
+      if (e.ctrlKey && e.key === "Insert") e.preventDefault();
+    }
+
+    function editorCopy(id) {
+      const el = document.getElementById(id);
+      if (el.selectionStart !== el.selectionEnd) {
+        internalClipboard = el.value.substring(el.selectionStart, el.selectionEnd);
+      }
+    }
+
+    function editorCut(id) {
+      const el = document.getElementById(id);
+      const start = el.selectionStart; const end = el.selectionEnd;
+      if (start !== end) {
+        internalClipboard = el.value.substring(start, end);
+        el.value = el.value.substring(0, start) + el.value.substring(end);
+        el.selectionStart = el.selectionEnd = start;
+        updateWordCount(id, id === 'swtText' ? 'swtWordCount' : (id === 'weText' ? 'weWordCount' : 'sstWordCount'));
+      }
+    }
+
+    function editorPaste(id) {
+      if (!internalClipboard) return;
+      const el = document.getElementById(id);
+      const start = el.selectionStart; const end = el.selectionEnd;
+      el.value = el.value.substring(0, start) + internalClipboard + el.value.substring(end);
+      el.selectionStart = el.selectionEnd = start + internalClipboard.length;
+      updateWordCount(id, id === 'swtText' ? 'swtWordCount' : (id === 'weText' ? 'weWordCount' : 'sstWordCount'));
+    }
+
+    function getWordCount(text) {
+      const clean = text.trim();
+      return clean ? clean.split(/\s+/).length : 0;
+    }
+
+    function updateWordCount(id, countId) {
+      const val = document.getElementById(id).value;
+      document.getElementById(countId).innerText = `${getWordCount(val)} Word(s)`;
+    }
+
+    /* MIC CHECK FUNCTIONS */
+    async function startMicCheckRec() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        testAudioChunks = [];
+        testMediaRecorder = new MediaRecorder(stream);
+        testMediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) testAudioChunks.push(e.data); };
+        testMediaRecorder.onstop = () => {
+          const blob = new Blob(testAudioChunks, { type: 'audio/ogg; codecs=opus' });
+          if (micTestAudioUrl) URL.revokeObjectURL(micTestAudioUrl);
+          micTestAudioUrl = URL.createObjectURL(blob);
+          document.getElementById('btnPlayTest').disabled = false;
+          document.getElementById('btnNext').disabled = false;
+          document.getElementById('micCheckStatus').style.display = "block";
+        };
+        testMediaRecorder.start();
+        document.getElementById('btnRecTest').disabled = true;
+        document.getElementById('btnRecTest').classList.add('recording');
+        document.getElementById('btnStopTest').disabled = false;
+        document.getElementById('btnPlayTest').disabled = true;
+        document.getElementById('micCheckStatus').style.display = "none";
+      } catch (err) {
+        alert("Microphone access denied.");
+      }
+    }
+
+    function stopMicCheckRec() {
+      if (testMediaRecorder && testMediaRecorder.state === "recording") testMediaRecorder.stop();
+      document.getElementById('btnRecTest').disabled = false;
+      document.getElementById('btnRecTest').classList.remove('recording');
+      document.getElementById('btnStopTest').disabled = true;
+    }
+
+    function playMicCheckRec() {
+      if (micTestAudioUrl) {
+        globalAudio.src = micTestAudioUrl;
+        globalAudio.play();
+      }
+    }
+
+    /* STEP FLOW CONTROLLER */
+    function handleNextClick() {
+      if (isTransitioning) return;
+      isTransitioning = true;
+
+      const item = examFlow[currentStepIndex];
+
+      // Stop recording to ensure current task audio is processed with correct title
+      if (mediaRecorder && mediaRecorder.state === "recording") {
+        mediaRecorder.stop();
+      }
+
+      // Save Data from current task
+      if (item.type === "SWT") {
+        const swtVal = document.getElementById('swtText').value.trim();
+        sendTextToTelegram("Summarize Written Text (SWT)", swtVal, getWordCount(swtVal));
+      } else if (item.type === "WE") {
+        const weVal = document.getElementById('weText').value.trim();
+        sendTextToTelegram("Write Essay (WE)", weVal, getWordCount(weVal));
+      } else if (item.type === "READING_OVERVIEW") {
+        studentName = document.getElementById('candidateNameInput')?.value.trim() || "Candidate";
+        startReadingContinuousTimer();
+      } else if (["FIB_RW", "RO", "FIB_R"].includes(item.type)) {
+        if (item.type === "FIB_RW") {
+          readingResponses[currentStepIndex] = {};
+          Object.keys(item.dropdowns).forEach(k => {
+            readingResponses[currentStepIndex][k] = document.getElementById(k)?.value || "Empty";
+          });
+        } else if (item.type === "RO") {
+          const targetSlots = document.querySelectorAll('#roTargetTable .ro-slot');
+          readingResponses[currentStepIndex] = [];
+          targetSlots.forEach(slot => {
+            if (slot.firstElementChild) {
+              readingResponses[currentStepIndex].push(slot.firstElementChild.id.replace('ro_card_', ''));
+            }
+          });
+        } else if (item.type === "FIB_R") {
+          readingResponses[currentStepIndex] = {};
+          Object.keys(item.answers).forEach(k => {
+            const zone = document.getElementById(k);
+            readingResponses[currentStepIndex][k] = zone && zone.firstElementChild ? zone.firstElementChild.innerText.trim() : "Empty";
+          });
+        }
+
+        // Check if Reading Section is ending to submit Reading Report
+        if (item.readingIndex === 8) {
+          sendReadingConsolidatedReport();
+        }
+      } else if (item.type === "SST") {
+        const sstVal = document.getElementById('sstText').value.trim();
+        sendTextToTelegram("Summarize Spoken Text 1", sstVal, getWordCount(sstVal));
+      } else if (item.type === "LFIB") {
+        let score = 0;
+        let details = [];
+        const ansKeys = Object.keys(item.answers);
+        ansKeys.forEach((k, idx) => {
+          const userVal = document.getElementById(`blank${idx + 1}`)?.value.trim() || "";
+          const correctVal = item.answers[k];
+          if (userVal.toLowerCase() === correctVal.toLowerCase()) {
+            score++;
+            details.push(`  Blank ${idx + 1}: ✅ ${userVal}`);
+          } else {
+            details.push(`  Blank ${idx + 1}: ❌ ${userVal || '[Empty]'} (Correct: ${correctVal})`);
+          }
+        });
+        sendLFIBResultToTelegram(score, ansKeys.length, details);
+      } else if (item.type === "HIW") {
+        const targetKeys = Object.keys(item.incorrectTargets);
+        let correctPicks = 0;
+        let wrongPicks = 0;
+        let details = [];
+
+        hiwSelectedWords.forEach(word => {
+          if (item.incorrectTargets[word]) {
+            correctPicks++;
+            details.push(`  ✅ [${word}] ➔ Audio: "${item.incorrectTargets[word]}"`);
+          } else {
+            wrongPicks++;
+            details.push(`  ❌ [${word}] ➔ (Incorrect Pick - Negative Mark)`);
+          }
+        });
+
+        targetKeys.forEach(tKey => {
+          if (!hiwSelectedWords.has(tKey)) {
+            details.push(`  ⚠️ [${tKey}] ➔ Missed (Audio: "${item.incorrectTargets[tKey]}")`);
+          }
+        });
+
+        const finalScore = Math.max(0, correctPicks - wrongPicks);
+        sendHIWResultToTelegram(finalScore, targetKeys.length, correctPicks, wrongPicks, details);
+      } else if (item.type === "WFD") {
+        const userText = document.getElementById('wfdInput').value.trim();
+        const targetWords = item.sentence.split(/\s+/).map(cleanWordPreserveCase).filter(w => w);
+        const userWords = userText.split(/\s+/).map(cleanWordPreserveCase).filter(w => w);
+
+        let matchedWords = [];
+        let missedWords = [];
+        let capErrors = [];
+        let tempUserWords = [...userWords];
+
+        targetWords.forEach(tWord => {
+          const exactIdx = tempUserWords.indexOf(tWord);
+          if (exactIdx !== -1) {
+            matchedWords.push(tWord);
+            tempUserWords.splice(exactIdx, 1);
+          } else {
+            const caseInsensitiveIdx = tempUserWords.findIndex(uW => uW.toLowerCase() === tWord.toLowerCase());
+            if (caseInsensitiveIdx !== -1) {
+              const wrongCaseWord = tempUserWords[caseInsensitiveIdx];
+              capErrors.push(`[${wrongCaseWord} ➔ Should be: ${tWord}]`);
+              missedWords.push(`${tWord} (Capitalization Error: typed '${wrongCaseWord}')`);
+              tempUserWords.splice(caseInsensitiveIdx, 1);
+            } else {
+              missedWords.push(tWord);
+            }
+          }
+        });
+
+        const score = matchedWords.length;
+        const totalWords = targetWords.length;
+        const percentage = Math.round((score / totalWords) * 100);
+
+        wfdUserSubmissions.push({
+          id: item.listeningIndex - 2, // WFD 1 to 4
+          userText: userText || "[No response typed]",
+          score: score,
+          totalWords: totalWords,
+          percentage: percentage,
+          matchedWords: matchedWords,
+          missedWords: missedWords,
+          capErrors: capErrors
+        });
+      }
+
+      globalAudio.pause();
+      clearInterval(prepTimer);
+      clearInterval(recTimer);
+
+      if (currentStepIndex < examFlow.length - 1) {
+        currentStepIndex++;
+        setTimeout(() => renderCurrentStep(), 450);
+      } else {
+        finishAllExam();
+      }
+    }
+
+    function sendReadingConsolidatedReport() {
+      let grandTotalScore = 0;
+      let grandMaxScore = 0;
+      let sectionScores = {
+        FIB_RW: { score: 0, max: 0, label: "Reading & Writing FIB (FIB-RW)" },
+        RO: { score: 0, max: 0, label: "Re-order Paragraphs (RO)" },
+        FIB_R: { score: 0, max: 0, label: "Reading FIB (FIB-R)" }
+      };
+      let reportSections = [];
+
+      examFlow.forEach((q, idx) => {
+        if (!["FIB_RW", "RO", "FIB_R"].includes(q.type)) return;
+
+        const resp = readingResponses[idx] || {};
+        let qScore = 0;
+        let qMax = 0;
+        let details = [];
+
+        if (q.type === "FIB_RW" || q.type === "FIB_R") {
+          const keys = Object.keys(q.answers);
+          qMax = keys.length;
+          keys.forEach((k, bIdx) => {
+            const userVal = resp[k] || "Empty";
+            const correctVal = q.answers[k];
+            if (userVal.toLowerCase() === correctVal.toLowerCase()) {
+              qScore++;
+              details.push(`  Blank ${bIdx + 1}: ✅ ${userVal}`);
+            } else {
+              details.push(`  Blank ${bIdx + 1}: ❌ ${userVal} (Correct: ${correctVal})`);
+            }
+          });
+        } else if (q.type === "RO") {
+          const userOrder = resp || [];
+          qMax = q.correctOrder.length - 1;
+          for (let i = 0; i < q.correctOrder.length - 1; i++) {
+            const pair1 = q.correctOrder[i];
+            const pair2 = q.correctOrder[i + 1];
+            const uIdx = userOrder.indexOf(pair1);
+            if (uIdx !== -1 && userOrder[uIdx + 1] === pair2) {
+              qScore++;
+              details.push(`  Pair ${i + 1}: ✅ [${pair1} ➔ ${pair2}]`);
+            } else {
+              details.push(`  Pair ${i + 1}: ❌ Missed (Correct: [${pair1} ➔ ${pair2}])`);
+            }
+          }
+        }
+
+        grandTotalScore += qScore;
+        grandMaxScore += qMax;
+        sectionScores[q.type].score += qScore;
+        sectionScores[q.type].max += qMax;
+        reportSections.push(`📌 ${q.title}: ${qScore}/${qMax}\n` + details.join('\n'));
+      });
+
+      const readingTelegramReport = `🎯 <b>PTE ROOM Mock Result (Reading Section)</b>\n` +
+        `👤 Candidate: ${studentName}\n` +
+        `📊 Total Reading Score: ${grandTotalScore} / ${grandMaxScore}\n\n` +
+        `📑 <b>Section Breakdown:</b>\n` +
+        `• ${sectionScores.FIB_RW.label}: ${sectionScores.FIB_RW.score}/${sectionScores.FIB_RW.max}\n` +
+        `• ${sectionScores.RO.label}: ${sectionScores.RO.score}/${sectionScores.RO.max}\n` +
+        `• ${sectionScores.FIB_R.label}: ${sectionScores.FIB_R.score}/${sectionScores.FIB_R.max}\n\n` +
+        `----------------------------\n` +
+        reportSections.join('\n\n') +
+        `\n----------------------------`;
+
+      sendTelegramMessage(readingTelegramReport);
+    }
+
+    async function finishAllExam() {
+      clearInterval(sectionTimerInterval);
+      clearInterval(readingTimerInterval);
+      clearInterval(listeningBatchTimerInterval);
+      clearInterval(prepTimer);
+      clearInterval(recTimer);
+      clearInterval(countdownInterval);
+      globalAudio.pause();
+
+      // Deactivate access code in Google Sheets & Notify
+      await markTestFinished();
+
+      // Final WFD Consolidated Telegram Report
+      let grandTotalScore = 0;
+      let grandTotalWords = 0;
+      let reportParts = [];
+
+      wfdUserSubmissions.forEach(sub => {
+        grandTotalScore += sub.score;
+        grandTotalWords += sub.totalWords;
+
+        let capLine = sub.capErrors.length > 0 ? `\n🔠 <b>Capitalization Error:</b> ${sub.capErrors.join(', ')}` : '';
+
+        reportParts.push(
+          `📌 <b>WFD ${sub.id}:</b>\n` +
+          `🎯 <b>Score:</b> ${sub.score}/${sub.totalWords} (${sub.percentage}%)\n` +
+          `📝 <b>User Response:</b> ${sub.userText}\n` +
+          `✅ <b>Correct Words (${sub.matchedWords.length}):</b> ${sub.matchedWords.join(', ') || 'None'}\n` +
+          `❌ <b>Incorrect / Missed Words (${sub.missedWords.length}):</b> ${sub.missedWords.join(', ') || 'None'}` +
+          capLine
+        );
+      });
+
+      const grandPercentage = Math.round((grandTotalScore / grandTotalWords) * 100);
+
+      const telegramMsg = `🎧 <b>Write From Dictation (WFD) Section Results</b>\n` +
+        `👤 <b>Candidate:</b> ${studentName}\n` +
+        `📊 <b>Total WFD Score:</b> ${grandTotalScore} / ${grandTotalWords}\n` +
+        `📈 <b>Overall WFD Accuracy:</b> ${grandPercentage}%\n\n` +
+        `----------------------------\n` +
+        reportParts.join('\n\n') +
+        `\n----------------------------`;
+
+      sendTelegramMessage(telegramMsg);
+
+      // Render Final Pearson Official Screen
+      document.getElementById('timerDisplay').style.display = 'none';
+      document.getElementById('pageCounter').style.display = 'none';
+      document.getElementById('examFooter').style.display = 'none';
+
+      document.getElementById('mainContainer').innerHTML = `
+        <div class="completion-container">
+          <div class="completion-title">PTE ROOM Scored Practice 1</div>
+          <div class="assessment-badge">
+            <span style="font-size: 20px;">✔</span>
+            <span>Assessment Submitted</span>
+          </div>
+          <div class="assessment-feedback-box">
+            <div class="feedback-title">Assessment Feedback</div>
+            <div class="feedback-desc">Your submission is being reviewed and a report will be available in myPTE Practice Portal shortly.</div>
+          </div>
+          <div class="close-tab-text">You can now close this tab</div>
+        </div>
+      `;
+    }
+
+    /* TELEGRAM API DISPATCHERS */
+    async function sendTelegramMessage(text) {
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: TELEGRAM_ADMIN_ID, text: text, parse_mode: "HTML" })
+        });
+      } catch (err) { console.error("Telegram send error:", err); }
+    }
+
+    async function sendVoiceToTelegram(blob, title) {
+      const formData = new FormData();
+      formData.append("chat_id", TELEGRAM_ADMIN_ID);
+      formData.append("voice", blob, "speaking.ogg");
+      formData.append("caption", `🎙 Speaking Response\n📌 Task: ${title}\n👤 Candidate: ${studentName}`);
+
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendVoice`, { method: "POST", body: formData });
+      } catch (err) { console.error("Voice send error:", err); }
+    }
+
+    async function sendTextToTelegram(taskTitle, content, wordCount) {
+      const message = `📝 <b>Candidate Response</b>\n📌 <b>Task:</b> ${taskTitle}\n👤 <b>Candidate:</b> ${studentName}\n📊 <b>Word Count:</b> ${wordCount} words\n\n📄 <b>Submitted Text:</b>\n${content || "<i>[No response entered]</i>"}`;
+      sendTelegramMessage(message);
+    }
+
+    async function sendLFIBResultToTelegram(score, maxScore, details) {
+      const message = `🎧 <b>Listening FIB Response</b>\n📌 <b>Task:</b> Fill in the Blanks 1 (Emotion)\n👤 <b>Candidate:</b> ${studentName}\n📊 <b>Score:</b> ${score} / ${maxScore}\n\n📄 <b>Details:</b>\n` + details.join('\n');
+      sendTelegramMessage(message);
+    }
+
+    async function sendHIWResultToTelegram(score, maxScore, correctCount, wrongCount, details) {
+      const message = `🎧 <b>Listening HIW Response</b>\n📌 <b>Task:</b> Highlight Incorrect Words 1\n👤 <b>Candidate:</b> ${studentName}\n📊 <b>Final Score:</b> ${score} / ${maxScore}\n📈 <b>Correct Picks:</b> ${correctCount}\n📉 <b>Incorrect Picks (Penalty):</b> ${wrongCount}\n\n📄 <b>Details:</b>\n` + details.join('\n');
+      sendTelegramMessage(message);
+    }
+
+    window.onload = async () => {
+      await initMicrophone();
+      renderCurrentStep();
+    };
+  </script>
+</body>
+</html>

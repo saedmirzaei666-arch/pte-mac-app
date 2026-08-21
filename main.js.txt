@@ -1,0 +1,17 @@
+const { app, BrowserWindow, systemPreferences } = require('electron');
+
+function createWindow() {
+  const win = new BrowserWindow({
+    width: 1300,
+    height: 850,
+    webPreferences: { nodeIntegration: false }
+  });
+  win.loadFile('index.html');
+}
+
+app.whenReady().then(async () => {
+  if (process.platform === 'darwin') {
+    await systemPreferences.askForMediaAccess('microphone');
+  }
+  createWindow();
+});
