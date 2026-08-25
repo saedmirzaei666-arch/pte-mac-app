@@ -172,9 +172,18 @@
   <audio id="beepAudioElement" src="./audio/beep.wav" preload="auto"></audio>
 
   <script>
-    const TELEGRAM_BOT_TOKEN = "7276771319:AAHK0pr11xPfN9fKZjN-q-iFySQYTCxTLk4";
-    const TELEGRAM_ADMIN_ID = "-5524392972";
+    /* Telegram removed — results collected locally then emailed via /api/send-result */
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyXBL2MUo5iYXghCipEvc067-fpRxXTk4WlETY9XC6PHtYgpijGZ-aw3N4xmzlGRLb6GQ/exec";
+    const TEACHER_EMAIL = "YOUR_EMAIL@example.com";
+    const API_SEND_RESULT = "/api/send-result";
+
+    window.__mockBag = {
+      studentName: "",
+      answers: {},
+      audioBlobs: {},
+      scores: {},
+      startedAt: new Date().toISOString()
+    };
 
     let currentAccessCode = "";
     let studentName = "Candidate";
@@ -184,49 +193,64 @@
 
     // Full Unified Exam Flow
     const examFlow = [
-      // 1. INTRO & MIC CHECK
-      { type: "MIC_CHECK", title: "Microphone Check" },
-      { type: "READY", title: "Ready to start the test" },
-      { type: "SPEAKING_OVERVIEW", title: "Speaking & Writing Overview" },
-      { type: "PERSONAL_INTRO", title: "Personal Introduction", prepTime: 25, recTime: 30 },
-
-      // 2. SPEAKING SECTION
-      { type: "RA", title: "Read Aloud 1 (#1360 Society)", text: "Societies face numerous challenges, including inequality, discrimination, and social injustice. It's important to recognize these issues and work towards building a more equitable and compassionate society. By raising awareness, supporting marginalized communities, and advocating for social justice, we can work towards creating a better future for all.", prepTime: 40, recTime: 40 },
-      { type: "RA", title: "Read Aloud 2 (#1302 Natural Environments)", text: "The environment consists of various components that interact and influence each other. For instance, the atmosphere provides the air we breathe, while bodies of water like rivers, lakes, and oceans support diverse aquatic ecosystems. Landscapes encompass forests, grasslands, mountains, and deserts, each with its unique characteristics and biodiversity.", prepTime: 40, recTime: 40 },
-      { type: "RA", title: "Read Aloud 3 (#1044 Being Scared)", text: "Being scared to death boils down to our autonomic response to a strong emotion, such as fear. For fear-induced deaths, the demise starts with our fight-or-flight response, which is the body’s physical response to a perceived threat. This response is characterized by an increased heart rate, anxiety, perspiration, and increased blood glucose levels.", prepTime: 40, recTime: 40 },
-
-      { type: "RS", title: "Repeat Sentence 1", audioSrc: "./audio/rs1.mp3", recTime: 15 },
-      { type: "RS", title: "Repeat Sentence 2", audioSrc: "./audio/rs2.mp3", recTime: 15 },
-      { type: "RS", title: "Repeat Sentence 3", audioSrc: "./audio/rs3.mp3", recTime: 15 },
-      { type: "RS", title: "Repeat Sentence 4", audioSrc: "./audio/rs4.mp3", recTime: 15 },
-      { type: "RS", title: "Repeat Sentence 5", audioSrc: "./audio/rs5.mp3", recTime: 15 },
-
-      { type: "DI", title: "Describe Image 1", imgSrc: "./image/di1.jpg", prepTime: 25, recTime: 40 },
-      { type: "DI", title: "Describe Image 2", imgSrc: "./image/di2.jpg", prepTime: 25, recTime: 40 },
-      { type: "DI", title: "Describe Image 3", imgSrc: "./image/di3.jpg", prepTime: 25, recTime: 40 },
-
-      { type: "RL", title: "Re-tell Lecture 1", audioSrc: "./audio/rl1.mp3", prepTime: 10, recTime: 40 },
-      { type: "SGD", title: "Summarize Group Discussion 1", audioSrc: "./audio/sgd1.mp3", prepTime: 10, recTime: 120 },
-      { type: "RTS", title: "Respond to a Situation 1", audioSrc: "./audio/rts1.mp3", text: "The school is looking for volunteers to help students during orientation. You want to join this event because you are good at preparing publicity materials, and you are available on Friday. What would you say to the committee?", prepTime: 10, recTime: 40 },
-
-      // 3. WRITING SECTION
-      { type: "WRITING_TRANSITION", title: "Writing Section Transition" },
-      { 
+{ type: "MIC_CHECK", title: "Microphone Check" },
+{ type: "READY", title: "Ready to start the test" },
+{ type: "SPEAKING_OVERVIEW", title: "Speaking & Writing Overview" },
+{ type: "PERSONAL_INTRO", title: "Personal Introduction", prepTime: 25, recTime: 30 },
+{ type: "RA", title: "Read Aloud 1", text: "Societies face numerous challenges, including inequality, discrimination, and social injustice. It's important to recognize these issues and work towards building a more equitable and compassionate society. By raising awareness, supporting marginalized communities, and advocating for social justice, we can work towards creating a better future for all.", prepTime: 40, recTime: 40 },
+{ type: "RA", title: "Read Aloud 2", text: "The environment consists of various components that interact and influence each other. For instance, the atmosphere provides the air we breathe, while bodies of water like rivers, lakes, and oceans support diverse aquatic ecosystems. Landscapes encompass forests, grasslands, mountains, and deserts, each with its unique characteristics and biodiversity.", prepTime: 40, recTime: 40 },
+{ type: "RA", title: "Read Aloud 3", text: "Being scared to death boils down to our autonomic response to a strong emotion, such as fear. For fear-induced deaths, the demise starts with our fight-or-flight response, which is the body’s physical response to a perceived threat. This response is characterized by an increased heart rate, anxiety, perspiration, and increased blood glucose levels.", prepTime: 40, recTime: 40 },
+{ type: "RA", title: "Read Aloud 4", text: "Public transportation plays a vital role in reducing traffic congestion and air pollution in large cities. Efficient metro networks and bus systems encourage people to leave their cars at home. When service is reliable and affordable, ridership tends to increase significantly.", prepTime: 40, recTime: 40 },
+{ type: "RA", title: "Read Aloud 5", text: "Regular physical activity is linked to improved mental health as well as physical fitness. Even moderate exercise, such as brisk walking, can reduce stress and improve sleep quality. Health experts recommend combining aerobic activity with strength training for balanced benefits.", prepTime: 40, recTime: 40 },
+{ type: "RA", title: "Read Aloud 6", text: "Marine protected areas help conserve biodiversity by limiting fishing and industrial activity in sensitive habitats. Coral reefs and coastal ecosystems recover more effectively when human pressure is reduced. International cooperation is often required because ocean currents carry pollutants across national boundaries.", prepTime: 40, recTime: 40 },
+{ type: "RS", title: "Repeat Sentence 1", audioSrc: "./audio/rs1.mp3", recTime: 15, sentence: "The library opens at nine o'clock every weekday morning." },
+{ type: "RS", title: "Repeat Sentence 2", audioSrc: "./audio/rs2.mp3", recTime: 15, sentence: "Students should submit their assignments before the final deadline." },
+{ type: "RS", title: "Repeat Sentence 3", audioSrc: "./audio/rs3.mp3", recTime: 15, sentence: "Climate change is affecting weather patterns around the world." },
+{ type: "RS", title: "Repeat Sentence 4", audioSrc: "./audio/rs4.mp3", recTime: 15, sentence: "The museum will host a special exhibition next month." },
+{ type: "RS", title: "Repeat Sentence 5", audioSrc: "./audio/rs5.mp3", recTime: 15, sentence: "Please make sure your mobile phones are switched off during the lecture." },
+{ type: "RS", title: "Repeat Sentence 6", audioSrc: "./audio/rs6.mp3", recTime: 15, sentence: "Research shows that sleep plays an important role in memory consolidation." },
+{ type: "RS", title: "Repeat Sentence 7", audioSrc: "./audio/rs7.mp3", recTime: 15, sentence: "Public transport is often cheaper and more environmentally friendly than driving." },
+{ type: "RS", title: "Repeat Sentence 8", audioSrc: "./audio/rs8.mp3", recTime: 15, sentence: "The conference will take place in the main auditorium on Friday." },
+{ type: "RS", title: "Repeat Sentence 9", audioSrc: "./audio/rs9.mp3", recTime: 15, sentence: "Water scarcity has become a serious concern in many arid regions." },
+{ type: "RS", title: "Repeat Sentence 10", audioSrc: "./audio/rs10.mp3", recTime: 15, sentence: "Candidates must bring a valid form of identification to the examination room." },
+{ type: "DI", title: "Describe Image 1", imgSrc: "./image/di1.jpg", prepTime: 25, recTime: 40 },
+{ type: "DI", title: "Describe Image 2", imgSrc: "./image/di2.jpg", prepTime: 25, recTime: 40 },
+{ type: "DI", title: "Describe Image 3", imgSrc: "./image/di3.jpg", prepTime: 25, recTime: 40 },
+{ type: "DI", title: "Describe Image 4", imgSrc: "./image/di4.jpg", prepTime: 25, recTime: 40 },
+{ type: "DI", title: "Describe Image 5", imgSrc: "./image/di5.jpg", prepTime: 25, recTime: 40 },
+{ type: "RL", title: "Re-tell Lecture 1", audioSrc: "./audio/rl1.mp3", prepTime: 10, recTime: 40 },
+{ type: "RL", title: "Re-tell Lecture 2", audioSrc: "./audio/rl2.mp3", prepTime: 10, recTime: 40 },
+{ type: "ASQ", title: "Answer Short Question 1", audioSrc: "./audio/asq1.mp3", recTime: 10, question: "What do people usually use to write on a blackboard?", answer: "chalk" },
+{ type: "ASQ", title: "Answer Short Question 2", audioSrc: "./audio/asq2.mp3", recTime: 10, question: "How many days are there in a leap year?", answer: "366" },
+{ type: "ASQ", title: "Answer Short Question 3", audioSrc: "./audio/asq3.mp3", recTime: 10, question: "What is the opposite of expensive?", answer: "cheap" },
+{ type: "ASQ", title: "Answer Short Question 4", audioSrc: "./audio/asq4.mp3", recTime: 10, question: "Which organ pumps blood around the human body?", answer: "heart" },
+{ type: "ASQ", title: "Answer Short Question 5", audioSrc: "./audio/asq5.mp3", recTime: 10, question: "What do you call a person who teaches at a university?", answer: "professor" },
+{ type: "ASQ", title: "Answer Short Question 6", audioSrc: "./audio/asq6.mp3", recTime: 10, question: "In which season do leaves usually fall from trees?", answer: "autumn" },
+{ type: "SGD", title: "Summarize Group Discussion 1", audioSrc: "./audio/sgd1.mp3", prepTime: 10, recTime: 40 },
+{ type: "SGD", title: "Summarize Group Discussion 2", audioSrc: "./audio/sgd2.mp3", prepTime: 10, recTime: 40 },
+{ type: "RTS", title: "Respond to a Situation 1", audioSrc: "./audio/rts1.mp3", text: "The school is looking for volunteers to help students during orientation. You want to join this event because you are good at preparing publicity materials, and you are available on Friday. What would you say to the committee?", prepTime: 20, recTime: 40 },
+{ type: "RTS", title: "Respond to a Situation 2", audioSrc: "./audio/rts2.mp3", text: "You borrowed a classmate's textbook and accidentally spilled coffee on several pages. You see the classmate in the corridor. What would you say?", prepTime: 20, recTime: 40 },
+{ type: "WRITING_TRANSITION", title: "Writing Section Transition" },
+{ 
         type: "SWT", 
-        title: "Summarize Written Text", 
+        title: "Summarize Written Text 1", 
         duration: 10 * 60,
         text: "<p>The 1920's movie goers experience was largely dominated by silent movies but saw the introduction of synchronized sound. In the 1920's movie stars were really stars - with huge salaries, the fashions and activities of the Hollywood greats echoed around the world and 100,000 people would gather in cities all over the world, including such diverse cities as London and Moscow, to greet Mary Pickford and Douglas Fairbanks when they toured of Europe. Early silent movies were often accompanied by live piano or organ music and provided enormous entertainment value to audiences captivated by the experience of watching moving pictures on the silver screen. Although there had been previous attempts to introduce sound, it wasn't until 1923 that a synchronized soundtrack was photographically recorded and printed on to the side of the strip of motion picture film and made it on to a commercially distributed movie. It would still be seven long years before talking pictures gained total supremacy and finally replaced the silent film era.</p><p>The first movie theatres were called Nickelodeons, and were very basic compared to the luxurious picture palaces that followed but what an aura of excitement, of laughter, fun and tears surrounded them! Before the introduction of movie soundtracks, movies were often accompanied by scripted music from a piano.</p>" 
       },
-      { 
+{ 
+        type: "SWT", 
+        title: "Summarize Written Text 2", 
+        duration: 10 * 60,
+        text: "<p>Electric vehicles are often promoted as a clean alternative to petrol cars, yet their environmental impact depends heavily on how electricity is generated. In countries that still rely mainly on coal, charging an electric car can produce substantial carbon emissions. Battery production also requires mining of metals such as lithium and cobalt, which raises concerns about habitat damage and labour conditions. Nevertheless, as power grids shift toward renewable sources and recycling of batteries improves, the long-term advantages of electric vehicles are expected to grow. Policymakers therefore focus both on cleaner electricity and on responsible supply chains.</p>" 
+      },
+{ 
         type: "WE", 
         title: "Write Essay", 
         duration: 20 * 60,
-        text: "Nowadays, it is increasingly more difficult to maintain the right balance between work and the other aspects of one's life, such as leisure pursuits with family members. How important do you think this balance is and what are the reasons why some people think that this is hard to achieve？" 
+        text: "Some people believe that university education should focus mainly on practical job skills, while others argue that it should prioritise broad academic knowledge and critical thinking. Discuss both views and give your own opinion." 
       },
-
-      // 4. READING SECTION (8 Questions, 17 Mins Batch)
-      { type: "READING_OVERVIEW", title: "Reading Overview" },
-      {
+{ type: "READING_OVERVIEW", title: "Reading Overview" },
+{
         title: "Herbal",
         type: "FIB_RW",
         readingIndex: 1,
@@ -240,7 +264,7 @@
         },
         answers: { b1: "recorded", b2: "translated", b3: "survives", b4: "prescribed" }
       },
-      {
+{
         title: "Whale's Dialects",
         type: "FIB_RW",
         readingIndex: 2,
@@ -254,7 +278,7 @@
         },
         answers: { b1: "creatures", b2: "producing", b3: "dialects", b4: "similarities" }
       },
-      {
+{
         title: "Body Energy",
         type: "FIB_RW",
         readingIndex: 3,
@@ -269,10 +293,76 @@
         },
         answers: { b1: "toddlers", b2: "mass", b3: "recruited", b4: "measured", b5: "conserve" }
       },
-      {
+{
+        title: "Urban Heat Islands",
+        type: "FIB_RW",
+        readingIndex: 4,
+        instruction: "Below is a text with blanks. Select the appropriate answer choice for each blank.",
+        text: "Cities often experience higher temperatures than surrounding rural areas, a phenomenon known as the urban heat island effect. Dark surfaces such as asphalt {b1} large amounts of solar radiation and release it slowly at night. Limited vegetation reduces natural cooling through {b2}. Dense buildings can also {b3} wind flow, trapping warm air. Researchers argue that increasing green spaces and reflective materials can {b4} these effects and improve public health during heatwaves.",
+        dropdowns: {
+          b1: ["absorb", "ignore", "reflect", "scatter"],
+          b2: ["evaporation", "erosion", "pollution", "migration"],
+          b3: ["restrict", "accelerate", "encourage", "measure"],
+          b4: ["mitigate", "magnify", "ignore", "celebrate"]
+        },
+        answers: { b1: "absorb", b2: "evaporation", b3: "restrict", b4: "mitigate" }
+      },
+{
+        title: "Sleep and Memory",
+        type: "FIB_RW",
+        readingIndex: 5,
+        instruction: "Below is a text with blanks. Select the appropriate answer choice for each blank.",
+        text: "Scientists have long known that sleep plays a critical role in consolidating memory. During deep sleep, the brain appears to {b1} important information from the day while discarding less useful details. Laboratory studies show that participants who sleep after learning a task often {b2} better than those who stay awake. Disruptions to sleep cycles can {b3} this process and reduce academic performance. As a result, educators increasingly {b4} healthy sleep habits for students.",
+        dropdowns: {
+          b1: ["replay", "delete", "invent", "translate"],
+          b2: ["perform", "complain", "withdraw", "hesitate"],
+          b3: ["impair", "improve", "guarantee", "celebrate"],
+          b4: ["recommend", "prohibit", "overlook", "punish"]
+        },
+        answers: { b1: "replay", b2: "perform", b3: "impair", b4: "recommend" }
+      },
+{
+        title: "Ocean Plastic",
+        type: "MC_R_MULTI",
+        readingIndex: 6,
+        instruction: "Read the text and answer the question by selecting all the correct responses. More than one response is correct.",
+        text: "Plastic waste in oceans harms marine animals through entanglement and ingestion. Microplastics can enter food chains and eventually reach humans. Rivers are major pathways carrying litter from inland areas to the sea. Cleanup operations help, but reducing plastic production and improving waste management on land are widely considered more effective long-term solutions.",
+        prompt: "Which of the following statements are supported by the text?",
+        options: [
+          "Rivers transport a significant amount of plastic to the ocean",
+          "Microplastics can move through food chains",
+          "Ocean cleanup alone is the most effective permanent solution",
+          "Entanglement is one way plastic harms marine animals"
+        ],
+        answers: [
+          "Rivers transport a significant amount of plastic to the ocean",
+          "Microplastics can move through food chains",
+          "Entanglement is one way plastic harms marine animals"
+        ]
+      },
+{
+        title: "Digital Archives",
+        type: "MC_R_MULTI",
+        readingIndex: 7,
+        instruction: "Read the text and answer the question by selecting all the correct responses. More than one response is correct.",
+        text: "Libraries and museums increasingly digitize rare manuscripts to improve access and protect originals from handling damage. High-resolution scans allow researchers worldwide to examine details without travel. Still, digitization is expensive, requires ongoing data storage, and cannot fully replace the material experience of historical objects. Institutions therefore often pursue a combined strategy of conservation and digital access.",
+        prompt: "According to the passage, which points are true about digitization?",
+        options: [
+          "It can reduce physical handling of fragile originals",
+          "It allows remote access for researchers",
+          "It completely removes the need to preserve physical objects",
+          "It involves significant ongoing costs for storage"
+        ],
+        answers: [
+          "It can reduce physical handling of fragile originals",
+          "It allows remote access for researchers",
+          "It involves significant ongoing costs for storage"
+        ]
+      },
+{
         title: "Coins",
         type: "RO",
-        readingIndex: 4,
+        readingIndex: 8,
         instruction: "The text boxes in the left panel have been placed in a random order. Restore the original order by dragging text boxes from the left panel to the right panel.",
         items: [
           { id: "1", text: "However, when archaeologists want to know the absolute date of a site, they can often go beyond simple stratigraphy." },
@@ -282,10 +372,10 @@
         ],
         correctOrder: ["4", "1", "2", "3"]
       },
-      {
+{
         title: "Calves Experiment",
         type: "RO",
-        readingIndex: 5,
+        readingIndex: 9,
         instruction: "Restore the original order by dragging text boxes to the target panel.",
         items: [
           { id: "1", text: "To gauge optimism and pessimism, the researchers set up an experiment involving 22 calves." },
@@ -296,60 +386,196 @@
         ],
         correctOrder: ["1", "2", "5", "4", "3"]
       },
-      {
+{
         title: "Béhanzin",
         type: "FIB_R",
-        readingIndex: 6,
+        readingIndex: 10,
         instruction: "In the text below some words are missing. Drag words from the box below to the appropriate place in the text.",
         text: "Behanzin ruled the West African [b1] of Dahomey at the end of the nineteenth century, a time when Europeans were doing their utmost to colonise Africa. Behanzin put up extremely [b2] resistance. He did this with the [b3] of an army, including five thousand female warriors. He is often called King Shark, a name suggesting [b4] and wisdom. Famed for being a [b5] as well as a warrior, he wrote some of the most beautiful songs ever produced in Dahomey.",
         pool: ["kingdom", "powerful", "aid", "strength", "poet", "monarch", "light", "battle"],
         answers: { b1: "kingdom", b2: "powerful", b3: "aid", b4: "strength", b5: "poet" }
       },
-      {
+{
         title: "Arts & Science",
         type: "FIB_R",
-        readingIndex: 7,
+        readingIndex: 11,
         instruction: "Drag words from the box below to the appropriate place in the text.",
         text: "An investigation into the study habits of undergraduates was carried out by a [b1] of researchers at a number of different universities. In all the universities [b2] in the study, it was found that there were the [b3] significant differences between the habits of arts and science students. Not surprisingly perhaps, arts students read more [b4], while science students tended to concentrate on a few [b5] texts.",
         pool: ["team", "participating", "same", "widely", "core", "staff", "involving", "heavily"],
         answers: { b1: "team", b2: "participating", b3: "same", b4: "widely", b5: "core" }
       },
-      {
+{
         title: "Dolphins",
         type: "FIB_R",
-        readingIndex: 8,
+        readingIndex: 12,
         instruction: "Drag words from the box below to the appropriate place in the text.",
         text: "Dolphins are marine mammals found all over the world. There are many [b1] species. They are well-known as intelligent creatures and seem to [b2] with one another in sophisticated ways. Dolphins are [b3] animals in that they live in groups. These can [b4] in size from five to several hundred. They often hunt in groups and work together to [b5] the fish or squid they like to eat.",
         pool: ["different", "communicate", "sociable", "range", "capture", "learn", "grow", "strange"],
         answers: { b1: "different", b2: "communicate", b3: "sociable", b4: "range", b5: "capture" }
       },
-
-      // 5. LISTENING SECTION (Overview + SST 10m + Batch 6 Questions 10m)
-      { type: "LISTENING_OVERVIEW", title: "Listening Overview" },
-      { 
+{
+        title: "Honeybees",
+        type: "FIB_R",
+        readingIndex: 13,
+        instruction: "In the text below some words are missing. Drag words from the box below to the appropriate place in the text.",
+        text: "Honeybees communicate the location of food sources through a [b1] known as the waggle dance. The angle of the dance indicates direction relative to the sun, while its duration reflects [b2]. This system allows the colony to [b3] resources efficiently. Environmental stress and pesticides can [b4] these communication patterns and threaten colony survival.",
+        pool: ["behavior", "distance", "exploit", "disrupt", "temperature", "ignore", "ceremony", "silence"],
+        answers: { b1: "behavior", b2: "distance", b3: "exploit", b4: "disrupt" }
+      },
+{
+        title: "Plastic Recycling",
+        type: "FIB_R",
+        readingIndex: 14,
+        instruction: "In the text below some words are missing. Drag words from the box below to the appropriate place in the text.",
+        text: "Although recycling symbols appear on many plastic products, actual recycling rates remain relatively [b1]. Different polymer types must be separated, and contamination often [b2] processing. Some materials can only be recycled a limited number of times before quality [b3]. Experts emphasize that reducing consumption is as important as improving [b4] systems.",
+        pool: ["low", "complicates", "declines", "collection", "high", "simplifies", "improves", "advertising"],
+        answers: { b1: "low", b2: "complicates", b3: "declines", b4: "collection" }
+      },
+{
+        title: "Renewable Energy Storage",
+        type: "MC_R_SINGLE",
+        readingIndex: 15,
+        instruction: "Read the text and answer the multiple-choice question by selecting the correct response. Only one response is correct.",
+        text: "One challenge of solar and wind power is intermittency: energy is not always produced when demand is highest. Battery storage can shift electricity to peak hours, but large-scale batteries remain costly. Alternative approaches include pumped hydro storage and converting surplus electricity into hydrogen. Policymakers must weigh infrastructure costs against long-term climate benefits.",
+        prompt: "What is the main problem discussed in the passage?",
+        options: [
+          "Solar panels are less efficient than wind turbines",
+          "Renewable energy is not always available when demand is high",
+          "Hydrogen is too dangerous for everyday use",
+          "Batteries never work with wind power"
+        ],
+        answer: "Renewable energy is not always available when demand is high"
+      },
+{
+        title: "Urban Agriculture",
+        type: "MC_R_SINGLE",
+        readingIndex: 16,
+        instruction: "Read the text and answer the multiple-choice question by selecting the correct response. Only one response is correct.",
+        text: "Urban agriculture has gained attention as cities seek more resilient food systems. Rooftop gardens and community plots can supply fresh produce, reduce transport emissions, and strengthen social ties. However, limited space, soil contamination, and unclear land-use rules can restrict expansion. Successful projects usually combine local government support with active resident participation.",
+        prompt: "According to the passage, which factor often helps urban agriculture succeed?",
+        options: [
+          "Replacing all rural farms with city gardens",
+          "Avoiding any government involvement",
+          "Support from local government together with resident participation",
+          "Using only imported soil"
+        ],
+        answer: "Support from local government together with resident participation"
+      },
+{ type: "LISTENING_OVERVIEW", title: "Listening Overview" },
+{ 
         type: "SST", 
         title: "Summarize Spoken Text 1", 
         audioSrc: "./audio/sst1.mp3", 
         duration: 10 * 60 
       },
-      {
+{
+        type: "MC_L_MULTI",
+        title: "Listening MC Multiple 1",
+        listeningIndex: 1,
+        audioSrc: "./audio/lmcm1.mp3",
+        prepTime: 7,
+        prompt: "Which of the following are mentioned as benefits of urban parks?",
+        options: ["They reduce local temperatures", "They always increase property taxes", "They provide space for exercise", "They can improve air quality"],
+        answers: ["They reduce local temperatures", "They provide space for exercise", "They can improve air quality"]
+      },
+{
+        type: "MC_L_MULTI",
+        title: "Listening MC Multiple 2",
+        listeningIndex: 2,
+        audioSrc: "./audio/lmcm2.mp3",
+        prepTime: 7,
+        prompt: "According to the speaker, which factors influence sleep quality?",
+        options: ["Regular bedtime routines", "High caffeine intake late in the day", "Screen use right before sleep", "Eating only fruit for dinner"],
+        answers: ["Regular bedtime routines", "High caffeine intake late in the day", "Screen use right before sleep"]
+      },
+{
         type: "LFIB",
         title: "Listening Fill in the Blanks 1",
-        listeningIndex: 1,
+        listeningIndex: 3,
         audioSrc: "./audio/lfib1.mp3",
         prepTime: 7,
-        answers: {
-          b1: "orchestrated",
-          b2: "genome",
-          b3: "programmed",
-          b4: "essence",
-          b5: "quite"
-        }
+        answers: { b1: "orchestrated", b2: "genome", b3: "programmed", b4: "essence", b5: "quite" }
       },
-      {
+{
+        type: "LFIB",
+        title: "Listening Fill in the Blanks 2",
+        listeningIndex: 4,
+        audioSrc: "./audio/lfib2.mp3",
+        prepTime: 7,
+        answers: { b1: "goals", b2: "tasks", b3: "feedback", b4: "deadline", b5: "team" },
+        htmlPassage: `Successful group projects require clear <input type="text" id="blank1" class="lfib-input" autocomplete="off"> and regular meetings. Each member should know their <input type="text" id="blank2" class="lfib-input" autocomplete="off"> before the <input type="text" id="blank3" class="lfib-input" autocomplete="off">. Honest <input type="text" id="blank4" class="lfib-input" autocomplete="off"> helps the <input type="text" id="blank5" class="lfib-input" autocomplete="off"> improve over time.`
+      },
+{
+        type: "HCS",
+        title: "Highlight Correct Summary 1",
+        listeningIndex: 5,
+        audioSrc: "./audio/hcs1.mp3",
+        prepTime: 7,
+        options: [
+          "The talk explains how electric cars always produce zero emissions in every country.",
+          "The talk discusses how the environmental benefit of electric cars depends on electricity sources and battery production.",
+          "The talk argues that petrol cars are cleaner than all electric vehicles.",
+          "The talk focuses only on the high price of electric car batteries."
+        ],
+        answer: "The talk discusses how the environmental benefit of electric cars depends on electricity sources and battery production."
+      },
+{
+        type: "HCS",
+        title: "Highlight Correct Summary 2",
+        listeningIndex: 6,
+        audioSrc: "./audio/hcs2.mp3",
+        prepTime: 7,
+        options: [
+          "Libraries are closing everywhere because nobody reads books anymore.",
+          "Digital tools have replaced libraries completely in modern cities.",
+          "Libraries still matter by offering access, study space and community services in a digital age.",
+          "The speaker says libraries should stop lending printed books."
+        ],
+        answer: "Libraries still matter by offering access, study space and community services in a digital age."
+      },
+{
+        type: "MC_L_SINGLE",
+        title: "Listening MC Single 1",
+        listeningIndex: 7,
+        audioSrc: "./audio/lmcs1.mp3",
+        prepTime: 7,
+        prompt: "What is the speaker’s main point?",
+        options: [
+          "Travel is always harmful to the environment",
+          "Tourism can support local economies when managed responsibly",
+          "Hotels should ban all international guests",
+          "Air travel will disappear within five years"
+        ],
+        answer: "Tourism can support local economies when managed responsibly"
+      },
+{
+        type: "MC_L_SINGLE",
+        title: "Listening MC Single 2",
+        listeningIndex: 8,
+        audioSrc: "./audio/lmcs2.mp3",
+        prepTime: 7,
+        prompt: "Why does the speaker recommend note-taking by hand in lectures?",
+        options: [
+          "Because laptops are forbidden in all classrooms",
+          "Because writing by hand can improve focus and memory for some students",
+          "Because handwritten notes are always shorter",
+          "Because teachers cannot read typed work"
+        ],
+        answer: "Because writing by hand can improve focus and memory for some students"
+      },
+{
+        type: "SMW",
+        title: "Select Missing Word 1",
+        listeningIndex: 9,
+        audioSrc: "./audio/smw1.mp3",
+        prepTime: 7,
+        options: ["population growth", "climate policy", "road construction", "music education"],
+        answer: "population growth"
+      },
+{
         type: "HIW",
         title: "Highlight Incorrect Words 1",
-        listeningIndex: 2,
+        listeningIndex: 10,
         audioSrc: "./audio/hiw1.mp3",
         prepTime: 10,
         rawParagraph: "The most fascinating thing I've found from the work that we and others have done is that simple shifts can have such a big impact. Adding a couple letters to the end of a word can increase the likelihood that other people do what you ask them.\n\nSo, some researchers a couple years ago went to a local preschool, and they asked four or five-year-old kids to clean up a messy classroom. The floor was covered in pencils and toys and books, and they asked the kids for help cleaning up. For some of the kids, they used a normal method we might use. They said, \"Hey, can you help clean up?\" But for the second half of the kids, they tested a slightly different strategy. They asked them, \"Would you mind being a helper and cleaning up the classroom?\" Now, the difference between asking for help and asking for someone to be a helper is exceptionally small. It's adding two letters at the end of the word help. Yet, those two letters led to about a 50% increase in people's likelihood of helping.",
@@ -361,34 +587,43 @@
           "exceptionally": "infinitesimally"
         }
       },
-      {
+{
+        type: "HIW",
+        title: "Highlight Incorrect Words 2",
+        listeningIndex: 11,
+        audioSrc: "./audio/hiw2.mp3",
+        prepTime: 10,
+        rawParagraph: "Researchers found that short walks after meals can help control blood sugar levels. The study involved adults who walked for twenty minutes three times a day for one month.",
+        incorrectTargets: { "twenty": "ten", "month": "week" }
+      },
+{
         type: "WFD",
         title: "Write From Dictation 1",
-        listeningIndex: 3,
+        listeningIndex: 12,
         audioSrc: "./audio/wfd1.mp3",
         prepTime: 7,
         sentence: "The supposed scientific benefits of space exploration are frequently questioned."
       },
-      {
+{
         type: "WFD",
         title: "Write From Dictation 2",
-        listeningIndex: 4,
+        listeningIndex: 13,
         audioSrc: "./audio/wfd2.mp3",
         prepTime: 7,
         sentence: "When launching a product investigating and marketing are very crucial."
       },
-      {
+{
         type: "WFD",
         title: "Write From Dictation 3",
-        listeningIndex: 5,
+        listeningIndex: 14,
         audioSrc: "./audio/wfd3.mp3",
         prepTime: 7,
         sentence: "A visit to the designed museum is of great value."
       },
-      {
+{
         type: "WFD",
         title: "Write From Dictation 4",
-        listeningIndex: 6,
+        listeningIndex: 15,
         audioSrc: "./audio/wfd4.mp3",
         prepTime: 7,
         sentence: "Honey can be used as food and health product."
@@ -418,7 +653,7 @@
     let currentSelectedCard = null;
     let draggedElementId = null;
     let readingTimerInterval = null;
-    let readingSecondsLeft = 17 * 60;
+    let readingSecondsLeft = 29 * 60;
     let readingTimerStarted = false;
 
     // Listening Batch Timer (10 Mins)
@@ -807,6 +1042,34 @@
         `;
         playAudioPrompt(item.audioSrc, 0, item.recTime);
       }
+      // Answer Short Question
+      else if (item.type === "ASQ") {
+        topTitle.innerText = "Speaking & Writing";
+        pageCounter.innerText = item.title;
+        container.innerHTML = `
+          <div style="text-align: left;">
+            <div class="instruction">You will hear a question. Please give a simple and short answer. Often just one or a few words is enough.</div>
+            <div class="player-box">
+              <div class="player-status-bar">
+                <span class="player-play-icon" id="playerIcon">▶</span>
+                <span id="playerTime">0:00 / 0:00</span>
+                <div class="player-bar-wrap"><div class="player-bar-fill" id="playerBarFill"></div></div>
+                <span>🔊</span>
+              </div>
+            </div>
+            <div class="recorder-box">
+              <div class="recorder-header">Audio Recorder</div>
+              <div class="recorder-status" id="recStatus">Status: Playing Audio</div>
+              <div class="recorder-bottom">
+                <div class="rec-dot" id="recDot"></div>
+                <span class="rec-time" id="recTimeText">0:${item.recTime}</span>
+                <div class="rec-bar-wrap"><div class="rec-bar-fill" id="recBarFill"></div></div>
+              </div>
+            </div>
+          </div>
+        `;
+        playAudioPrompt(item.audioSrc, 0, item.recTime);
+      }
       // 7. DESCRIBE IMAGE
       else if (item.type === "DI") {
         topTitle.innerText = "Speaking & Writing";
@@ -1017,7 +1280,7 @@
         clearInterval(sectionTimerInterval);
         topTitle.innerText = "Reading";
         pageCounter.innerText = "Part 2: Reading";
-        document.getElementById('timerDisplay').innerText = "⏱ 17:00";
+        document.getElementById('timerDisplay').innerText = "⏱ 29:00";
 
         container.innerHTML = `
           <div style="max-width: 950px; text-align: left;">
@@ -1027,22 +1290,23 @@
               <li>In this part you will be tested on your reading skills.</li>
               <li>Read the instructions to each question carefully and answer as directed.</li>
             </ul>
-            <input type="text" id="candidateNameInput" class="name-input" placeholder="Candidate Name..." value="${studentName}">
             <table class="pearson-table" style="margin-top: 20px;">
               <thead><tr><th>Item Type</th><th>Time allowed</th></tr></thead>
               <tbody>
-                <tr><td>Fill in the blanks (dropdown)</td><td rowspan="3">17 Minutes</td></tr>
+                <tr><td>Fill in the blanks (dropdown)</td><td rowspan="5">29–30 Minutes</td></tr>
+                <tr><td>Multiple choice, multiple answers</td></tr>
                 <tr><td>Re-order paragraphs</td></tr>
                 <tr><td>Fill in the blanks (drag and drop)</td></tr>
+                <tr><td>Multiple choice, single answer</td></tr>
               </tbody>
             </table>
           </div>
         `;
       }
       // 15. READING QUESTIONS (FIB_RW, RO, FIB_R)
-      else if (item.type === "FIB_RW" || item.type === "RO" || item.type === "FIB_R") {
+      else if (["FIB_RW", "RO", "FIB_R", "MC_R_SINGLE", "MC_R_MULTI"].includes(item.type)) {
         topTitle.innerText = "Reading";
-        pageCounter.innerText = `${item.readingIndex} of 8`;
+        pageCounter.innerText = `${item.readingIndex} of 16`;
 
         if (!readingTimerStarted) {
           startReadingContinuousTimer();
@@ -1110,6 +1374,28 @@
               `).join('')}
             </div>
           `;
+        }
+        else if (item.type === "MC_R_SINGLE") {
+          html += `<div style="margin-bottom:14px;line-height:1.7;">${item.text}</div>`;
+          html += `<div style="font-weight:700;margin:12px 0 8px;">${item.prompt}</div>`;
+          item.options.forEach(opt => {
+            const v = opt.replace(/"/g, '&quot;');
+            html += `<label style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:8px;cursor:pointer;background:#fff;">
+              <input type="radio" name="mc_r_single" value="${v}" style="margin-top:3px;" />
+              <span>${opt}</span>
+            </label>`;
+          });
+        }
+        else if (item.type === "MC_R_MULTI") {
+          html += `<div style="margin-bottom:14px;line-height:1.7;">${item.text}</div>`;
+          html += `<div style="font-weight:700;margin:12px 0 8px;">${item.prompt}</div>`;
+          item.options.forEach(opt => {
+            const v = opt.replace(/"/g, '&quot;');
+            html += `<label style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:8px;cursor:pointer;background:#fff;">
+              <input type="checkbox" name="mc_r_multi" value="${v}" style="margin-top:3px;" />
+              <span>${opt}</span>
+            </label>`;
+          });
         }
 
         html += `</div>`;
@@ -1186,10 +1472,10 @@
       // 18. LFIB (1 of 6)
       else if (item.type === "LFIB") {
         topTitle.innerText = "Listening";
-        pageCounter.innerText = `${item.listeningIndex} of 6`;
+        pageCounter.innerText = `${item.listeningIndex} of 15`;
         startListeningBatchContinuousTimer();
         nextBtn.disabled = true;
-
+        const passage = item.htmlPassage || `And an emotion consists of a very well <input type="text" id="blank1" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> set of alterations in the body that has, as a general purpose, making life more survivable by taking care of a danger, of taking care of an opportunity, either/or, or something in between. And it’s something that is set in our <input type="text" id="blank2" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> and that we all have with a certain <input type="text" id="blank3" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> nature that is modified by our experience so individually we have variations on the pattern. But in <input type="text" id="blank4" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;">, your emotion of joy and mine are going to be extremely similar. We may express them physically slightly differently, and it’s of course graded depending on the circumstance, but the essence of the process is going to be the same, unless one of us is not <input type="text" id="blank5" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> well put together and is missing something, otherwise it’s going to be the same. And it’s going to be the same across even other species.`;
         container.innerHTML = `
           <div class="instruction">You will hear a recording. Type the missing words in each blank.</div>
           <div class="lst-player-box">
@@ -1202,16 +1488,49 @@
               <span>🔊</span>
             </div>
           </div>
-          <div class="lfib-content">
-            And an emotion consists of a very well <input type="text" id="blank1" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> set of alterations in the body that has, as a general purpose, making life more survivable by taking care of a danger, of taking care of an opportunity, either/or, or something in between. And it’s something that is set in our <input type="text" id="blank2" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> and that we all have with a certain <input type="text" id="blank3" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> nature that is modified by our experience so individually we have variations on the pattern. But in <input type="text" id="blank4" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;">, your emotion of joy and mine are going to be extremely similar. We may express them physically slightly differently, and it’s of course graded depending on the circumstance, but the essence of the process is going to be the same, unless one of us is not <input type="text" id="blank5" class="lfib-input" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" onkeydown="preventKeyboardShortcuts(event)" onpaste="return false;"> well put together and is missing something, otherwise it’s going to be the same. And it’s going to be the same across even other species.
-          </div>
+          <div class="lfib-content">${passage}</div>
         `;
         startListeningCountdownAndPlay(item.audioSrc, item.prepTime);
       }
-      // 19. HIW (2 of 6)
+      else if (item.type === "MC_L_SINGLE" || item.type === "MC_L_MULTI" || item.type === "HCS" || item.type === "SMW") {
+        topTitle.innerText = "Listening";
+        pageCounter.innerText = `${item.listeningIndex} of 15`;
+        startListeningBatchContinuousTimer();
+        nextBtn.disabled = true;
+        let opts = "";
+        if (item.type === "MC_L_MULTI") {
+          item.options.forEach(opt => {
+            const v = opt.replace(/"/g, '&quot;');
+            opts += `<label style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:8px;cursor:pointer;background:#fff;"><input type="checkbox" name="mc_l_multi" value="${v}" style="margin-top:3px;"/><span>${opt}</span></label>`;
+          });
+        } else {
+          const name = item.type === "HCS" ? "hcs" : (item.type === "SMW" ? "smw" : "mc_l_single");
+          item.options.forEach(opt => {
+            const v = opt.replace(/"/g, '&quot;');
+            opts += `<label style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:8px;cursor:pointer;background:#fff;"><input type="radio" name="${name}" value="${v}" style="margin-top:3px;"/><span>${opt}</span></label>`;
+          });
+        }
+        container.innerHTML = `
+          <div class="instruction">${item.type === "HCS" ? "You will hear a recording. Click on the paragraph that best relates to the recording." : (item.type === "SMW" ? "You will hear a recording. At the end of the recording the last word or group of words has been replaced by a beep. Select the correct option to complete the recording." : "Listen to the recording and answer the question.")}</div>
+          <div class="lst-player-box">
+            <div class="lst-player-header">Audio Player</div>
+            <div class="lst-player-status" id="lstStatus">Beginning in ${item.prepTime}</div>
+            <div class="lst-player-bottom">
+              <span id="lstPlayerIcon">▶</span>
+              <span id="lstPlayerTime">0:00 / 0:00</span>
+              <div class="player-bar-wrap"><div class="player-bar-fill" id="lstBarFill"></div></div>
+              <span>🔊</span>
+            </div>
+          </div>
+          ${item.prompt ? `<div style="font-weight:700;margin:12px 0 8px;">${item.prompt}</div>` : ""}
+          <div>${opts}</div>
+        `;
+        startListeningCountdownAndPlay(item.audioSrc, item.prepTime);
+      }
+      // HIW
       else if (item.type === "HIW") {
         topTitle.innerText = "Listening";
-        pageCounter.innerText = `${item.listeningIndex} of 6`;
+        pageCounter.innerText = `${item.listeningIndex} of 15`;
         startListeningBatchContinuousTimer();
         nextBtn.disabled = true;
         hiwSelectedWords.clear();
@@ -1236,11 +1555,11 @@
       // 20 to 23. WFD 1-4 (3 to 6 of 6)
       else if (item.type === "WFD") {
         topTitle.innerText = "Listening";
-        pageCounter.innerText = `${item.listeningIndex} of 6`;
+        pageCounter.innerText = `${item.listeningIndex} of 15`;
         startListeningBatchContinuousTimer();
         nextBtn.disabled = true;
 
-        if (item.listeningIndex === 6) {
+        if (item.listeningIndex === 15) {
           nextBtn.innerText = "Submit Exam ✅";
           nextBtn.style.backgroundColor = "#28a745";
         }
@@ -1641,9 +1960,8 @@
         const weVal = document.getElementById('weText').value.trim();
         sendTextToTelegram("Write Essay (WE)", weVal, getWordCount(weVal));
       } else if (item.type === "READING_OVERVIEW") {
-        studentName = document.getElementById('candidateNameInput')?.value.trim() || "Candidate";
         startReadingContinuousTimer();
-      } else if (["FIB_RW", "RO", "FIB_R"].includes(item.type)) {
+      } else if (["FIB_RW", "RO", "FIB_R", "MC_R_SINGLE", "MC_R_MULTI"].includes(item.type)) {
         if (item.type === "FIB_RW") {
           readingResponses[currentStepIndex] = {};
           Object.keys(item.dropdowns).forEach(k => {
@@ -1666,12 +1984,32 @@
         }
 
         // Check if Reading Section is ending to submit Reading Report
-        if (item.readingIndex === 8) {
+        if (item.type === "MC_R_SINGLE") {
+          const selected = document.querySelector('input[name="mc_r_single"]:checked');
+          readingResponses[currentStepIndex] = selected ? selected.value : "Empty";
+        } else if (item.type === "MC_R_MULTI") {
+          const checked = [...document.querySelectorAll('input[name="mc_r_multi"]:checked')].map(el => el.value);
+          readingResponses[currentStepIndex] = checked.length ? checked : ["Empty"];
+        }
+
+        if (item.readingIndex === 16) {
           sendReadingConsolidatedReport();
         }
       } else if (item.type === "SST") {
         const sstVal = document.getElementById('sstText').value.trim();
         sendTextToTelegram("Summarize Spoken Text 1", sstVal, getWordCount(sstVal));
+      } else if (item.type === "MC_L_SINGLE") {
+        const selected = document.querySelector('input[name="mc_l_single"]:checked');
+        window.__mockBag.scores[item.title] = { response: selected ? selected.value : "Empty", correct: item.answer };
+      } else if (item.type === "MC_L_MULTI") {
+        const checked = [...document.querySelectorAll('input[name="mc_l_multi"]:checked')].map(el => el.value);
+        window.__mockBag.scores[item.title] = { response: checked, correct: item.answers };
+      } else if (item.type === "HCS") {
+        const selected = document.querySelector('input[name="hcs"]:checked');
+        window.__mockBag.scores[item.title] = { response: selected ? selected.value : "Empty", correct: item.answer };
+      } else if (item.type === "SMW") {
+        const selected = document.querySelector('input[name="smw"]:checked');
+        window.__mockBag.scores[item.title] = { response: selected ? selected.value : "Empty", correct: item.answer };
       } else if (item.type === "LFIB") {
         let score = 0;
         let details = [];
@@ -1686,7 +2024,7 @@
             details.push(`  Blank ${idx + 1}: ❌ ${userVal || '[Empty]'} (Correct: ${correctVal})`);
           }
         });
-        sendLFIBResultToTelegram(score, ansKeys.length, details);
+        sendLFIBResultToTelegram(score, ansKeys.length, details, item.title);
       } else if (item.type === "HIW") {
         const targetKeys = Object.keys(item.incorrectTargets);
         let correctPicks = 0;
@@ -1710,7 +2048,7 @@
         });
 
         const finalScore = Math.max(0, correctPicks - wrongPicks);
-        sendHIWResultToTelegram(finalScore, targetKeys.length, correctPicks, wrongPicks, details);
+        sendHIWResultToTelegram(finalScore, targetKeys.length, correctPicks, wrongPicks, details, item.title);
       } else if (item.type === "WFD") {
         const userText = document.getElementById('wfdInput').value.trim();
         const targetWords = item.sentence.split(/\s+/).map(cleanWordPreserveCase).filter(w => w);
@@ -1744,7 +2082,7 @@
         const percentage = Math.round((score / totalWords) * 100);
 
         wfdUserSubmissions.push({
-          id: item.listeningIndex - 2, // WFD 1 to 4
+          id: item.title,
           userText: userText || "[No response typed]",
           score: score,
           totalWords: totalWords,
@@ -1773,12 +2111,14 @@
       let sectionScores = {
         FIB_RW: { score: 0, max: 0, label: "Reading & Writing FIB (FIB-RW)" },
         RO: { score: 0, max: 0, label: "Re-order Paragraphs (RO)" },
-        FIB_R: { score: 0, max: 0, label: "Reading FIB (FIB-R)" }
+        FIB_R: { score: 0, max: 0, label: "Reading FIB (FIB-R)" },
+        MC_R_SINGLE: { score: 0, max: 0, label: "MC Single Answer" },
+        MC_R_MULTI: { score: 0, max: 0, label: "MC Multiple Answers" }
       };
       let reportSections = [];
 
       examFlow.forEach((q, idx) => {
-        if (!["FIB_RW", "RO", "FIB_R"].includes(q.type)) return;
+        if (!["FIB_RW", "RO", "FIB_R", "MC_R_SINGLE", "MC_R_MULTI"].includes(q.type)) return;
 
         const resp = readingResponses[idx] || {};
         let qScore = 0;
@@ -1812,12 +2152,25 @@
               details.push(`  Pair ${i + 1}: ❌ Missed (Correct: [${pair1} ➔ ${pair2}])`);
             }
           }
+        } else if (q.type === "MC_R_SINGLE") {
+          qMax = 1;
+          if (String(resp) === String(q.answer)) { qScore = 1; details.push("  ✅ Correct"); }
+          else { details.push(`  ❌ ${resp} (Correct: ${q.answer})`); }
+        } else if (q.type === "MC_R_MULTI") {
+          const correctSet = new Set(q.answers || []);
+          const chosen = Array.isArray(resp) ? resp : [];
+          qMax = correctSet.size;
+          chosen.forEach(c => { if (correctSet.has(c)) qScore += 1; else qScore -= 1; });
+          qScore = Math.max(0, qScore);
+          details.push(`  Selected: ${chosen.join(" | ") || "none"}`);
         }
 
         grandTotalScore += qScore;
         grandMaxScore += qMax;
-        sectionScores[q.type].score += qScore;
-        sectionScores[q.type].max += qMax;
+        if (sectionScores[q.type]) {
+          sectionScores[q.type].score += qScore;
+          sectionScores[q.type].max += qMax;
+        }
         reportSections.push(`📌 ${q.title}: ${qScore}/${qMax}\n` + details.join('\n'));
       });
 
@@ -1833,6 +2186,163 @@
         `\n----------------------------`;
 
       sendTelegramMessage(readingTelegramReport);
+      window.__mockBag.scores["Reading"] = {
+        totalScore: grandTotalScore,
+        maxScore: grandMaxScore,
+        sections: sectionScores,
+        details: reportSections
+      };
+    }
+
+    /* ===== OBJECTIVE SCORING (no AI) ===== */
+    function computeObjectiveScores() {
+      const report = {
+        reading: { score: 0, max: 0, items: [] },
+        listening: { score: 0, max: 0, items: [] },
+        asq: { score: 0, max: 0, items: [] },
+        wfd: { score: 0, max: 0, items: [] }
+      };
+
+      // --- Reading from readingResponses + examFlow ---
+      examFlow.forEach((q, idx) => {
+        if (!["FIB_RW", "RO", "FIB_R", "MC_R_SINGLE", "MC_R_MULTI"].includes(q.type)) return;
+        const resp = readingResponses[idx];
+        let score = 0, max = 0, note = "", detail = "", ok = false;
+
+        if (q.type === "FIB_RW" || q.type === "FIB_R") {
+          const keys = Object.keys(q.answers || {});
+          max = keys.length;
+          const parts = [];
+          keys.forEach(k => {
+            const userRaw = String((resp && resp[k]) || "Empty");
+            const user = userRaw.trim().toLowerCase();
+            const ans = String(q.answers[k]).trim().toLowerCase();
+            const hit = user && user === ans;
+            if (hit) score++;
+            parts.push(`${k}: ${hit ? "✅" : "❌"} you «${userRaw}» → ${q.answers[k]}`);
+          });
+          note = `${score}/${max} blanks`;
+          detail = parts.join(" · ");
+          ok = score === max;
+        } else if (q.type === "RO") {
+          const userOrder = Array.isArray(resp) ? resp : [];
+          max = Math.max(0, (q.correctOrder || []).length - 1);
+          for (let i = 0; i < max; i++) {
+            const a = q.correctOrder[i], b = q.correctOrder[i + 1];
+            const u = userOrder.indexOf(a);
+            if (u !== -1 && userOrder[u + 1] === b) score++;
+          }
+          note = `${score}/${max} pairs`;
+          detail = `Your order: [${userOrder.join(", ")}] · Correct: [${(q.correctOrder || []).join(", ")}]`;
+          ok = score === max;
+        } else if (q.type === "MC_R_SINGLE") {
+          max = 1;
+          score = String(resp || "") === String(q.answer || "") ? 1 : 0;
+          note = score ? "correct" : "wrong";
+          detail = `You: ${resp || "—"} · Correct: ${q.answer}`;
+          ok = score === 1;
+        } else if (q.type === "MC_R_MULTI") {
+          const correctSet = new Set(q.answers || []);
+          const chosen = Array.isArray(resp) ? resp : [];
+          max = correctSet.size;
+          chosen.forEach(c => { score += correctSet.has(c) ? 1 : -1; });
+          score = Math.max(0, score);
+          note = `${score}/${max}`;
+          detail = `You: ${(chosen || []).join(" | ") || "—"} · Correct: ${(q.answers || []).join(" | ")}`;
+          ok = score === max;
+        }
+
+        report.reading.score += score;
+        report.reading.max += max;
+        report.reading.items.push({ title: q.title, type: q.type, score, max, note, detail, ok });
+      });
+
+      // --- Listening MC / HCS / SMW ---
+      examFlow.forEach((q) => {
+        if (!["MC_L_SINGLE", "MC_L_MULTI", "HCS", "SMW"].includes(q.type)) return;
+        const bag = window.__mockBag.scores[q.title];
+        let score = 0, max = 1, note = "no response", detail = "", ok = false;
+        if (q.type === "MC_L_MULTI") {
+          max = (q.answers || []).length;
+          const chosen = (bag && Array.isArray(bag.response)) ? bag.response : [];
+          const correctSet = new Set(q.answers || []);
+          chosen.forEach(c => { score += correctSet.has(c) ? 1 : -1; });
+          score = Math.max(0, score);
+          note = `${score}/${max}`;
+          detail = `You: ${chosen.join(" | ") || "—"} · Correct: ${(q.answers || []).join(" | ")}`;
+          ok = score === max;
+        } else {
+          const resp = bag ? bag.response : "Empty";
+          score = String(resp) === String(q.answer) ? 1 : 0;
+          note = score ? "correct" : "wrong";
+          detail = `You: ${resp || "—"} · Correct: ${q.answer}`;
+          ok = score === 1;
+        }
+        report.listening.score += score;
+        report.listening.max += max;
+        report.listening.items.push({ title: q.title, type: q.type, score, max, note, detail, ok });
+      });
+
+      // --- LFIB / HIW ---
+      Object.keys(window.__mockBag.scores).forEach(k => {
+        const s = window.__mockBag.scores[k];
+        if (!s || typeof s !== "object") return;
+        if (s.type === "LFIB" || s.type === "HIW") {
+          const score = s.score || 0;
+          const max = s.maxScore || 0;
+          report.listening.score += score;
+          report.listening.max += max;
+          report.listening.items.push({
+            title: k,
+            type: s.type,
+            score,
+            max,
+            note: s.type === "HIW" ? "net" : "blanks",
+            detail: Array.isArray(s.details) ? s.details.join(" · ") : "",
+            ok: max > 0 && score === max
+          });
+        }
+      });
+
+      // --- WFD ---
+      wfdUserSubmissions.forEach(sub => {
+        report.wfd.score += sub.score || 0;
+        report.wfd.max += sub.totalWords || 0;
+        const q = examFlow.find(x => x.type === "WFD" && x.title === sub.id);
+        report.wfd.items.push({
+          title: sub.id,
+          score: sub.score,
+          max: sub.totalWords,
+          percentage: sub.percentage,
+          userText: sub.userText,
+          detail: `You: ${sub.userText || "—"} · Target: ${(q && q.sentence) || "—"} · Matched: ${(sub.matchedWords || []).join(", ") || "none"}`,
+          ok: sub.score === sub.totalWords
+        });
+      });
+
+      // totals
+      const totalScore = report.reading.score + report.listening.score + report.wfd.score + report.asq.score;
+      const totalMax = report.reading.max + report.listening.max + report.wfd.max + report.asq.max;
+      const percentage = totalMax > 0 ? Math.round((totalScore / totalMax) * 100) : 0;
+
+      window.__mockBag.objective = {
+        ...report,
+        totalScore,
+        totalMax,
+        percentage,
+        scoredAt: new Date().toISOString()
+      };
+
+      // also mirror summary under scores
+      window.__mockBag.scores.objectiveSummary = {
+        reading: `${report.reading.score}/${report.reading.max}`,
+        listening: `${report.listening.score}/${report.listening.max}`,
+        wfd: `${report.wfd.score}/${report.wfd.max}`,
+        total: `${totalScore}/${totalMax}`,
+        percentage
+      };
+
+      return window.__mockBag.objective;
     }
 
     async function finishAllExam() {
@@ -1847,95 +2357,152 @@
       // Deactivate access code in Google Sheets & Notify
       await markTestFinished();
 
-      // Final WFD Consolidated Telegram Report
-      let grandTotalScore = 0;
-      let grandTotalWords = 0;
-      let reportParts = [];
+      // Objective auto-scoring
+      const obj = computeObjectiveScores();
 
-      wfdUserSubmissions.forEach(sub => {
-        grandTotalScore += sub.score;
-        grandTotalWords += sub.totalWords;
+      window.__mockBag.scores["WFD"] = {
+        totalScore: obj.wfd.score,
+        totalWords: obj.wfd.max,
+        percentage: obj.wfd.max ? Math.round((obj.wfd.score / obj.wfd.max) * 100) : 0,
+        details: wfdUserSubmissions
+      };
 
-        let capLine = sub.capErrors.length > 0 ? `\n🔠 <b>Capitalization Error:</b> ${sub.capErrors.join(', ')}` : '';
+      // Collect final package and try email (fallback: JSON download)
+      await deliverResultsByEmail();
 
-        reportParts.push(
-          `📌 <b>WFD ${sub.id}:</b>\n` +
-          `🎯 <b>Score:</b> ${sub.score}/${sub.totalWords} (${sub.percentage}%)\n` +
-          `📝 <b>User Response:</b> ${sub.userText}\n` +
-          `✅ <b>Correct Words (${sub.matchedWords.length}):</b> ${sub.matchedWords.join(', ') || 'None'}\n` +
-          `❌ <b>Incorrect / Missed Words (${sub.missedWords.length}):</b> ${sub.missedWords.join(', ') || 'None'}` +
-          capLine
-        );
-      });
-
-      const grandPercentage = Math.round((grandTotalScore / grandTotalWords) * 100);
-
-      const telegramMsg = `🎧 <b>Write From Dictation (WFD) Section Results</b>\n` +
-        `👤 <b>Candidate:</b> ${studentName}\n` +
-        `📊 <b>Total WFD Score:</b> ${grandTotalScore} / ${grandTotalWords}\n` +
-        `📈 <b>Overall WFD Accuracy:</b> ${grandPercentage}%\n\n` +
-        `----------------------------\n` +
-        reportParts.join('\n\n') +
-        `\n----------------------------`;
-
-      sendTelegramMessage(telegramMsg);
-
-      // Render Final Pearson Official Screen
+      // Render Final Screen with objective scores
       document.getElementById('timerDisplay').style.display = 'none';
       document.getElementById('pageCounter').style.display = 'none';
       document.getElementById('examFooter').style.display = 'none';
 
+      const s = obj;
+      const esc = (t) => String(t || "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+      const row = (it) => {
+        const full = it.max > 0 && it.score === it.max;
+        const partial = it.score > 0 && !full;
+        const border = full ? "#86efac" : (partial ? "#fde68a" : "#fca5a5");
+        const bg = full ? "#f0fdf4" : (partial ? "#fffbeb" : "#fef2f2");
+        const mark = full ? "✅" : (partial ? "🟡" : "❌");
+        return `<div style="border:1px solid ${border};background:${bg};border-radius:8px;padding:10px 12px;margin-bottom:8px;text-align:left;">
+          <div style="font-weight:700;font-size:13px;">${mark} ${esc(it.title)} <span style="font-weight:500;color:#64748b;">(${esc(it.type || "")})</span>
+            <span style="float:right;">${it.score}/${it.max}</span>
+          </div>
+          <div style="font-size:12px;color:#334155;margin-top:6px;line-height:1.5;">${esc(it.detail || it.note || "")}</div>
+        </div>`;
+      };
+
+      let reviewHtml = "";
+      if (s.reading.items.length) {
+        reviewHtml += `<div style="font-weight:700;margin:16px 0 8px;text-align:left;">📖 Reading</div>`;
+        s.reading.items.forEach(it => { reviewHtml += row(it); });
+      }
+      if (s.listening.items.length) {
+        reviewHtml += `<div style="font-weight:700;margin:16px 0 8px;text-align:left;">🎧 Listening</div>`;
+        s.listening.items.forEach(it => { reviewHtml += row(it); });
+      }
+      if (s.wfd.items.length) {
+        reviewHtml += `<div style="font-weight:700;margin:16px 0 8px;text-align:left;">✍️ Write From Dictation</div>`;
+        s.wfd.items.forEach(it => { reviewHtml += row(it); });
+      }
+
       document.getElementById('mainContainer').innerHTML = `
-        <div class="completion-container">
+        <div class="completion-container" style="padding-bottom:40px;">
           <div class="completion-title">PTE ROOM Scored Practice 1</div>
           <div class="assessment-badge">
             <span style="font-size: 20px;">✔</span>
             <span>Assessment Submitted</span>
           </div>
-          <div class="assessment-feedback-box">
-            <div class="feedback-title">Assessment Feedback</div>
-            <div class="feedback-desc">Your submission is being reviewed and a report will be available in myPTE Practice Portal shortly.</div>
+          <div class="assessment-feedback-box" style="text-align:left; max-width:560px; width:100%;">
+            <div class="feedback-title">Your Objective Results</div>
+            <div class="feedback-desc" style="margin-top:10px; line-height:1.8;">
+              <div>📖 Reading: <b>${s.reading.score} / ${s.reading.max}</b></div>
+              <div>🎧 Listening: <b>${s.listening.score} / ${s.listening.max}</b></div>
+              <div>✍️ WFD: <b>${s.wfd.score} / ${s.wfd.max}</b></div>
+              <div style="margin-top:8px; font-size:15px;">Total: <b>${s.totalScore} / ${s.totalMax}</b> (${s.percentage}%)</div>
+              <div style="margin-top:8px; color:#64748b; font-size:12px;">Speaking & Writing are reviewed separately (not in this score).</div>
+            </div>
           </div>
-          <div class="close-tab-text">You can now close this tab</div>
+          <div style="max-width:560px;width:100%;margin-top:8px;">
+            <div style="font-weight:700;font-size:15px;margin-bottom:4px;text-align:left;">Question review</div>
+            <div style="font-size:12px;color:#64748b;margin-bottom:10px;text-align:left;">✅ full marks · 🟡 partial · ❌ zero</div>
+            ${reviewHtml}
+          </div>
+          <div class="close-tab-text" style="margin-top:16px;">JSON report downloaded for your teacher (if email API is off).</div>
         </div>
       `;
     }
 
-    /* TELEGRAM API DISPATCHERS */
+    /* RESULT COLLECTORS (Telegram removed — local bag + email API) */
     async function sendTelegramMessage(text) {
-      try {
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ chat_id: TELEGRAM_ADMIN_ID, text: text, parse_mode: "HTML" })
-        });
-      } catch (err) { console.error("Telegram send error:", err); }
+      // no-op: Telegram disabled
+      window.__mockBag.scores._notes = window.__mockBag.scores._notes || [];
+      window.__mockBag.scores._notes.push(String(text || "").slice(0, 500));
     }
 
     async function sendVoiceToTelegram(blob, title) {
-      const formData = new FormData();
-      formData.append("chat_id", TELEGRAM_ADMIN_ID);
-      formData.append("voice", blob, "speaking.ogg");
-      formData.append("caption", `🎙 Speaking Response\n📌 Task: ${title}\n👤 Candidate: ${studentName}`);
-
       try {
-        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendVoice`, { method: "POST", body: formData });
-      } catch (err) { console.error("Voice send error:", err); }
+        window.__mockBag.audioBlobs[title || "speaking"] = blob;
+        // Keep a short-lived object URL for later upload
+        const url = URL.createObjectURL(blob);
+        window.__mockBag.answers[title || "speaking_audio"] = { type: "audio", objectUrl: url, size: blob.size };
+      } catch (err) {
+        console.error("Audio collect error:", err);
+      }
     }
 
     async function sendTextToTelegram(taskTitle, content, wordCount) {
-      const message = `📝 <b>Candidate Response</b>\n📌 <b>Task:</b> ${taskTitle}\n👤 <b>Candidate:</b> ${studentName}\n📊 <b>Word Count:</b> ${wordCount} words\n\n📄 <b>Submitted Text:</b>\n${content || "<i>[No response entered]</i>"}`;
-      sendTelegramMessage(message);
+      window.__mockBag.answers[taskTitle] = {
+        type: "text",
+        text: content || "",
+        wordCount: wordCount || 0
+      };
     }
 
-    async function sendLFIBResultToTelegram(score, maxScore, details) {
-      const message = `🎧 <b>Listening FIB Response</b>\n📌 <b>Task:</b> Fill in the Blanks 1 (Emotion)\n👤 <b>Candidate:</b> ${studentName}\n📊 <b>Score:</b> ${score} / ${maxScore}\n\n📄 <b>Details:</b>\n` + details.join('\n');
-      sendTelegramMessage(message);
+    async function sendLFIBResultToTelegram(score, maxScore, details, title) {
+      const key = title || "LFIB";
+      window.__mockBag.scores[key] = { type: "LFIB", score, maxScore, details };
     }
 
-    async function sendHIWResultToTelegram(score, maxScore, correctCount, wrongCount, details) {
-      const message = `🎧 <b>Listening HIW Response</b>\n📌 <b>Task:</b> Highlight Incorrect Words 1\n👤 <b>Candidate:</b> ${studentName}\n📊 <b>Final Score:</b> ${score} / ${maxScore}\n📈 <b>Correct Picks:</b> ${correctCount}\n📉 <b>Incorrect Picks (Penalty):</b> ${wrongCount}\n\n📄 <b>Details:</b>\n` + details.join('\n');
-      sendTelegramMessage(message);
+    async function sendHIWResultToTelegram(score, maxScore, correctCount, wrongCount, details, title) {
+      const key = title || "HIW";
+      window.__mockBag.scores[key] = { type: "HIW", score, maxScore, correctCount, wrongCount, details };
+    }
+
+    async function deliverResultsByEmail() {
+      window.__mockBag.studentName = studentName || "Candidate";
+      window.__mockBag.finishedAt = new Date().toISOString();
+
+      const payload = {
+        studentName: window.__mockBag.studentName,
+        teacherEmail: TEACHER_EMAIL,
+        startedAt: window.__mockBag.startedAt,
+        finishedAt: window.__mockBag.finishedAt,
+        answers: window.__mockBag.answers,
+        scores: window.__mockBag.scores,
+        objective: window.__mockBag.objective || null,
+        wfd: wfdUserSubmissions,
+        reading: readingResponses
+      };
+
+      try {
+        const res = await fetch(API_SEND_RESULT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+        if (!res.ok) throw new Error("status " + res.status);
+        console.log("Result email request sent");
+      } catch (e) {
+        console.warn("Email API not ready yet — results kept in window.__mockBag", e);
+        // Fallback: download a JSON report in the browser
+        try {
+          const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json" });
+          const a = document.createElement("a");
+          a.href = URL.createObjectURL(blob);
+          a.download = `pte-mock-result-${(studentName || "candidate").replace(/\s+/g, "_")}.json`;
+          a.click();
+        } catch (_) {}
+      }
     }
 
     window.onload = async () => {
